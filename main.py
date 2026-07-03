@@ -15,6 +15,7 @@ from app.routes.auth import router as auth_router
 from app.routes.employees import router as emp_router
 from app.routes.inbox import router as inbox_router
 from app.routes.performance import router as performance_router
+from app.routes.google_sheet import router as google_sheet_router
 
 # ── Create tables ──────────────────────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
@@ -59,6 +60,7 @@ app.include_router(auth_router)
 app.include_router(emp_router)
 app.include_router(inbox_router)
 app.include_router(performance_router)
+app.include_router(google_sheet_router)
 
 # ── Serve frontend ─────────────────────────────────────────────────────────
 if os.path.exists("frontend"):
