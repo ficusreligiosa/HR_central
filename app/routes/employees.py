@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from pydantic import BaseModel
 from app.database import get_db
 from app.models.employee import Employee
 from app.models.user import User
-from app.auth import get_current_user, require_hr_admin, require_hr_doc
+from app.auth import get_current_user, require_hr_admin, require_hr_doc, create_employee_login
 
 router = APIRouter(prefix="/api/employees", tags=["Employees"])
 
@@ -150,11 +151,22 @@ def get_employee(employee_code: str, db: Session = Depends(get_db), current_user
 def create_employee(payload: EmployeeCreate, db: Session = Depends(get_db), current_user: User = Depends(require_hr_admin)):
     if db.query(Employee).filter(Employee.employee_code == payload.employee_code).first():
         raise HTTPException(status_code=400, detail="Employee code already exists")
+
     emp = Employee(**payload.model_dump())
     db.add(emp)
+    db.flush()  # emp.employee_code / emp.name / emp.date_of_birth are populated from payload already
+
+    # ── Auto-create the employee's login account ──────────────────────────
+    user, initial_password = create_employee_login(db, emp)
+
     db.commit()
     db.refresh(emp)
-    return emp
+
+    return {
+        **jsonable_encoder(emp),
+        "login_username": user.username,
+        "initial_password": initial_password,
+    }
 
 @router.patch("/{employee_code}")
 def update_employee(employee_code: str, payload: EmployeeUpdate, db: Session = Depends(get_db), current_user: User = Depends(require_hr_doc)):

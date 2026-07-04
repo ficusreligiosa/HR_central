@@ -195,56 +195,6 @@
       margin-bottom: 14px;
     }
 
-    .role-tiles {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-
-    .role-tile {
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      border: 1.5px solid var(--border);
-      background: var(--surface2);
-      cursor: pointer;
-      transition: all 0.18s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .role-tile:hover {
-      border-color: var(--accent-md);
-      background: var(--accent-lt);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .role-tile.active {
-      border-color: var(--accent);
-      background: var(--accent-lt);
-      box-shadow: 0 0 0 3px rgba(42, 125, 111, 0.12);
-    }
-
-    .role-tile .rt-icon {
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    .role-tile .rt-info .rt-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .role-tile .rt-info .rt-role {
-      font-size: 11px;
-      color: var(--text3);
-      font-family: var(--mono);
-      margin-top: 1px;
-    }
-
     .form-group {
       margin-bottom: 16px;
     }
@@ -1902,40 +1852,10 @@
         <p>Employee Management System</p>
       </div>
       <div class="login-card">
-        <div class="login-card-title">Sign in as</div>
-        <div class="role-tiles" id="roleTiles">
-          <div class="role-tile" onclick="selectRole('admin','admin','Admin@123')" data-role="admin">
-            <div class="rt-icon">🛡️</div>
-            <div class="rt-info">
-              <div class="rt-name">Administrator</div>
-              <div class="rt-role">admin</div>
-            </div>
-          </div>
-          <div class="role-tile" onclick="selectRole('hr','harsh','Harsh@123')" data-role="hr">
-            <div class="rt-icon">👔</div>
-            <div class="rt-info">
-              <div class="rt-name">Harsh Kumar</div>
-              <div class="rt-role">hr</div>
-            </div>
-          </div>
-          <div class="role-tile" onclick="selectRole('admin','nupur','Nupur@123')" data-role="admin">
-            <div class="rt-icon">📋</div>
-            <div class="rt-info">
-              <div class="rt-name">Nupur Pandey</div>
-              <div class="rt-role">admin</div>
-            </div>
-          </div>
-          <div class="role-tile" onclick="selectRole('emp','emp','Emp@123')" data-role="emp">
-            <div class="rt-icon">👤</div>
-            <div class="rt-info">
-              <div class="rt-name">Employee</div>
-              <div class="rt-role">emp</div>
-            </div>
-          </div>
-        </div>
+        <div class="login-card-title">Sign in</div>
         <div class="form-group">
           <label>Username</label>
-          <input class="form-control" id="loginUsername" type="text" placeholder="Enter username"
+          <input class="form-control" id="loginUsername" type="text" placeholder="Employee Code, Email, or Username"
             autocomplete="username" />
         </div>
         <div class="form-group">
@@ -2297,13 +2217,6 @@
     initApp();
 
     // ===================== AUTH =====================
-    function selectRole(role, username, password) {
-      document.querySelectorAll('.role-tile').forEach(t => t.classList.remove('active'));
-      document.querySelector(`[data-role="${role}"]`).classList.add('active');
-      document.getElementById('loginUsername').value = username;
-      document.getElementById('loginPassword').value = password;
-    }
-
     async function doLogin() {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
@@ -2358,7 +2271,6 @@
       sessionStorage.removeItem('hrc_user');
       document.getElementById('appShell').classList.remove('active');
       document.getElementById('loginPage').style.display = 'flex';
-      document.querySelectorAll('.role-tile').forEach(t => t.classList.remove('active'));
       document.getElementById('loginUsername').value = '';
       document.getElementById('loginPassword').value = '';
     }
@@ -2465,21 +2377,28 @@
       try {
         const role = APP.user?.role;
         if (role === 'emp') {
-          APP.performanceReviews = await apiCall('GET', '/api/performance/') || [];
+          const [performance, policies] = await Promise.all([
+            apiCall('GET', '/api/performance/'),
+            apiCall('GET', '/api/policies/'),
+          ]);
+          APP.performanceReviews = performance || [];
+          APP.policies = policies || [];
           renderSidebarNav();
           if (APP.currentPage) navigateTo(APP.currentPage);
           return;
         }
-        const [g1, g2, inbox, performance] = await Promise.all([
+        const [g1, g2, inbox, performance, policies] = await Promise.all([
           apiCall('GET', '/api/employees/?type=G1&limit=500'),
           apiCall('GET', '/api/employees/?type=G2&limit=500'),
           role === 'admin' || role === 'hr' ? apiCall('GET', '/api/inbox/') : Promise.resolve([]),
           role === 'admin' || role === 'hr' ? apiCall('GET', '/api/performance/') : Promise.resolve([]),
+          apiCall('GET', '/api/policies/'),
         ]);
         APP.g1 = (g1 || []).map(mapEmployee);
         APP.g2 = (g2 || []).map(mapEmployee);
         APP.formInbox = (inbox || []).map(mapInboxItem);
         APP.performanceReviews = performance || [];
+        APP.policies = policies || [];
         renderSidebarNav();
         if (APP.currentPage) navigateTo(APP.currentPage);
         toast('Data loaded', 'success');
@@ -3012,7 +2931,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       if (!empCode || !empType || !dept || !desig || !reporting) { toast('Please fill all required fields', 'error'); return; }
 
       try {
-        await apiCall('POST', '/api/inbox/' + formId + '/approve', {
+        const res = await apiCall('POST', '/api/inbox/' + formId + '/approve', {
           employee_code: empCode,
           employee_type: empType,
           department: dept,
@@ -3022,7 +2941,11 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
         // Update local state
         f.status = 'approved'; f.empCode = empCode;
         closeModal('approveModal');
-        toast('✅ ' + f.Name + ' approved as ' + empCode, 'success');
+        if (res && res.initial_password) {
+          alert('✅ ' + f.Name + ' approved as ' + empCode + '\n\nLogin Username: ' + res.login_username + '\nInitial Password: ' + res.initial_password + '\n\nPlease share these credentials with the employee.');
+        } else {
+          toast('✅ ' + f.Name + ' approved as ' + empCode, 'success');
+        }
         await fetchAllData();
         navigateTo('formInbox');
       } catch (e) {
@@ -3098,7 +3021,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     }
 
     async function doBulkApprove(ids) {
-      let done = 0, skipped = 0, errors = [];
+      let done = 0, skipped = 0, errors = [], credentials = [];
       for (let i = 0; i < ids.length; i++) {
         const skip = document.getElementById('b_skip_' + i)?.checked;
         if (skip) { skipped++; continue; }
@@ -3109,34 +3032,29 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
         const desig = (document.getElementById('b_desig_' + i)?.value || '').trim();
         const reporting = (document.getElementById('b_report_' + i)?.value || '').trim();
         if (!empCode || !empType || !dept || !desig || !reporting) { errors.push('Row ' + (i + 1) + ': fill all fields'); continue; }
-        const f = APP.formInbox.find(x => x.id === ids[i]);
-        if (!f) continue;
-        const dobFmt = fmtDate(f["Date of Birth"]);
-        const age = dobFmt && /^\d{2}-\d{2}-\d{4}$/.test(dobFmt) ? calcAge(dobFmt) : 0;
-        const sheet = empType === 'G1' ? APP.g1 : APP.g2;
-        const today = (function () { const n = new Date(); return String(n.getDate()).padStart(2, '0') + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + n.getFullYear(); })();
-        const empRow = {
-          "Sl No": sheet.length + 1, "Enter Employee Code": empCode, "Name": f.Name,
-          "Father/Husband Name": f["Father's Name"], "Employee Type": empType,
-          "DOB(As per Adhar)": dobFmt, "Date Of Joining": fmtDate(f["Date of Joining"]),
-          "Marital Status": f["Marital Status"], "Contact Number": f["Contact Number"],
-          "E-mail ID (Personal)": f.Email, "Department": dept, "Designation": desig,
-          "Reporting Supervisor": reporting, "Aadhar": f["Adhar card Number"],
-          "PAN": f["Pan Number"], "Bank Name": f["Bank Name"],
-          "Bank Account No.": f["Bank Account Number"], "IFSC CODE": f["IFSC Code"],
-          "Qualification": f["Last qualification Certificate"], "Gender": f.Gender,
-          "Age": age, "Status": "Active", "Is PF Deducted": f["Is PF Deducted"] || "",
-          "Is ESIC Deducted": f["Is ESIC Deducted"] || "",
-          "Source": "Google Form", "ApprovedBy": APP.user.displayName, "CreatedAt": today
-        };
-        sheet.push(empRow);
-        f.status = 'approved'; f.empCode = empCode;
-        if (APP.scriptUrl) { try { await postToScript({ action: 'approveForm', formRowId: ids[i], ...empRow }); } catch (e) { } }
-        done++;
+        try {
+          const res = await apiCall('POST', '/api/inbox/' + ids[i] + '/approve', {
+            employee_code: empCode,
+            employee_type: empType,
+            department: dept,
+            designation: desig,
+            supervisor: reporting,
+          });
+          const f = APP.formInbox.find(x => x.id === ids[i]);
+          if (f) { f.status = 'approved'; f.empCode = empCode; }
+          if (res && res.initial_password) credentials.push(empCode + '  /  ' + res.initial_password);
+          done++;
+        } catch (e) {
+          errors.push('Row ' + (i + 1) + ': ' + (e.message || 'approval failed'));
+        }
       }
       closeModal('approveModal');
-      if (errors.length) { toast(errors[0], 'error'); } else { toast('✅ ' + done + ' approved' + (skipped ? ' · ' + skipped + ' skipped' : ''), 'success'); }
-      renderSidebarNav();
+      if (credentials.length) {
+        alert('✅ New employee logins created:\n\n' + credentials.join('\n') + '\n\nPlease share these credentials with the respective employees. Passwords cannot be retrieved again.');
+      }
+      if (errors.length) { toast(errors[0] + (errors.length > 1 ? ' (+' + (errors.length - 1) + ' more errors)' : ''), 'error'); }
+      else { toast('✅ ' + done + ' approved' + (skipped ? ' · ' + skipped + ' skipped' : ''), 'success'); }
+      await fetchAllData();
       navigateTo('formInbox');
     }
 
@@ -3646,15 +3564,39 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       if (dob && !dateRe.test(dob)) { toast('Date of Birth must be DD-MM-YYYY', 'error'); return; }
       if (doj && !dateRe.test(doj)) { toast('Date of Joining must be DD-MM-YYYY', 'error'); return; }
       const age = dob && dateRe.test(dob) ? calcAge(dob) : (parseInt(g('ae_age')) || 0);
-      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       let dept = g('ae_dept');
       if (dept === '__other__') dept = (document.getElementById('ae_custdept_input')?.value || '').trim();
       if (!dept) { toast('Please select or enter a department', 'error'); return; }
-      const today = (function () { const n = new Date(); return String(n.getDate()).padStart(2, '0') + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + n.getFullYear(); })();
-      const emp = { "Sl No": sheet.length + 1, "Enter Employee Code": code, "Name": name, "Father/Husband Name": g('ae_father'), "Employee Type": type, "DOB(As per Adhar)": dob, "Date Of Joining": doj, "Marital Status": g('ae_marital'), "Contact Number": g('ae_contact'), "E-mail ID (Personal)": g('ae_email'), "E-mail ID (Official)": g('ae_oemail'), "Department": dept, "Designation": g('ae_desig'), "Reporting Supervisor": g('ae_reporting'), "Aadhar": g('ae_aadhar'), "PAN": g('ae_pan'), "Bank Name": g('ae_bank'), "Bank Account No.": g('ae_accno'), "IFSC CODE": g('ae_ifsc'), "Qualification": g('ae_qual'), "Gender": g('ae_gender'), "Age": age, "Status": g('ae_status') || 'Active', "Source": "Manual", "ApprovedBy": APP.user.displayName, "CreatedAt": today };
-      sheet.push(emp);
-      if (APP.scriptUrl) { try { await postToScript({ action: 'addEmployee', ...emp }); } catch (e) { } }
-      closeModal('addEmpModal'); toast('✅ ' + name + ' added as ' + code, 'success'); navigateTo('masterDB');
+
+      const payload = {
+        name, employee_code: code, employee_type: type,
+        status: g('ae_status') || 'Active',
+        father_name: g('ae_father'), date_of_birth: dob, age,
+        gender: g('ae_gender'), marital_status: g('ae_marital'),
+        blood_group: g('ae_blood'), contact: g('ae_contact'),
+        personal_email: g('ae_email'), official_email: g('ae_oemail'),
+        aadhar_number: g('ae_aadhar'), pan_number: g('ae_pan'),
+        qualification: g('ae_qual'), bank_name: g('ae_bank'),
+        account_number: g('ae_accno'), ifsc_code: g('ae_ifsc'),
+        department: dept, designation: g('ae_desig'), supervisor: g('ae_reporting'),
+        date_of_joining: doj, uan_number: g('ae_uan'),
+        is_pf_deducted: g('ae_pf') !== 'No',
+        is_esic_deducted: g('ae_esic') !== 'No',
+      };
+
+      try {
+        const res = await apiCall('POST', '/api/employees/', payload);
+        closeModal('addEmpModal');
+        if (res && res.initial_password) {
+          alert('✅ Employee added successfully!\n\nLogin Username: ' + res.login_username + '\nInitial Password: ' + res.initial_password + '\n\nPlease share these credentials with ' + name + '. This password cannot be retrieved again — only reset by adding/updating the employee.');
+        } else {
+          toast('✅ ' + name + ' added as ' + code, 'success');
+        }
+        await fetchAllData();
+        navigateTo('masterDB');
+      } catch (e) {
+        toast('Error: ' + (e.message || 'Could not add employee'), 'error');
+      }
     }
 
     // ===================== SALARY PAGE =====================
@@ -4842,22 +4784,32 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
     }
 
     // ===================== POLICIES =====================
+    // ===================== POLICIES =====================
     function renderPolicies() {
-      const canAdd = APP.user?.role === 'admin';
-      const addBtn = canAdd ? '<button class="btn btn-primary" onclick="openAddPolicyModal()">➕ Add Policy</button>' : '';
+      const canManage = APP.user?.role === 'admin';
+      const addBtn = canManage ? '<button class="btn btn-primary" onclick="openAddPolicyModal()">➕ Add Policy</button>' : '';
       let body = '';
-      if (APP.policies.length === 0) {
-        body = '<div class="empty-state"><div class="empty-icon">📜</div><h3>No policies yet</h3><p style="color:var(--text3);font-size:13px;">Admins can add company policies using the button above.</p></div>';
+      if (!APP.policies.length) {
+        body = '<div class="empty-state"><div class="empty-icon">📜</div><h3>No policies yet</h3><p style="color:var(--text3);font-size:13px;">' + (canManage ? 'Click "Add Policy" to upload a file or add a Google Drive link.' : 'Admin has not added any company policies yet.') + '</p></div>';
       } else {
         const cards = APP.policies.map(function (p) {
-          const delBtn = canAdd ? '<button onclick="event.stopPropagation();deletePolicy(' + p.id + ')" style="position:absolute;top:10px;right:10px;background:var(--red-lt);border:1.5px solid var(--red);color:var(--red);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-weight:600;" title="Remove Policy">✕</button>' : '';
-          return '<div class="policy-card" style="position:relative;" onclick="window.open(\'' + p.url + '\',\'_blank\')">' +
-            delBtn +
-            '<div class="pc-icon">' + p.icon + '</div>' +
-            '<div class="pc-cat">' + p.category + '</div>' +
-            '<div class="pc-name">' + p.name + '</div>' +
-            '<div class="pc-desc">' + p.description + '</div>' +
-            '<div style="margin-top:12px;font-size:12px;color:var(--accent);font-weight:600;">View Document →</div>' +
+          const icon = p.filename ? (p.filename.toLowerCase().endsWith('.pdf') ? '📕' : /\.(png|jpg|jpeg|gif|webp)$/i.test(p.filename) ? '🖼️' : '📝') : '🔗';
+          const dateStr = p.created_at ? fmtDate(p.created_at.slice(0, 10).split('-').reverse().join('-')) : '—';
+          const manageBtns = canManage
+            ? '<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();editPolicy(' + p.id + ')" title="Edit">✏️</button>' +
+              '<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deletePolicy(' + p.id + ')" title="Delete">✕</button>'
+            : '';
+          return '<div class="policy-card" style="position:relative;">' +
+            '<div class="pc-icon">' + icon + '</div>' +
+            '<div class="pc-cat">' + (p.category || 'Policy') + '</div>' +
+            '<div class="pc-name">' + p.title + '</div>' +
+            '<div class="pc-desc">' + (p.description || '') + '</div>' +
+            '<div style="font-size:11px;color:var(--text4);margin-top:8px;">Uploaded ' + dateStr + '</div>' +
+            '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">' +
+            '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();viewPolicy(' + p.id + ')">👁️ View</button>' +
+            '<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();downloadPolicy(' + p.id + ')">⬇️ Download</button>' +
+            manageBtns +
+            '</div>' +
             '</div>';
         }).join('');
         body = '<div class="policy-grid">' + cards + '</div>';
@@ -4868,46 +4820,212 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         '</div>' + body;
     }
 
+    function viewPolicy(id) {
+      const p = APP.policies.find(x => x.id === id);
+      if (!p) return;
+      if (p.drive_url) { window.open(p.drive_url, '_blank'); return; }
+      openAuthedPolicyFile(id, false);
+    }
+
+    function downloadPolicy(id) {
+      const p = APP.policies.find(x => x.id === id);
+      if (!p) return;
+      if (p.drive_url) { window.open(p.drive_url, '_blank'); return; }
+      openAuthedPolicyFile(id, true);
+    }
+
+    // Uploaded files require the Bearer token, so we can't use a plain <a href>
+    // or window.open(url) — we fetch with auth, then open/download the blob.
+    async function openAuthedPolicyFile(id, forceDownload) {
+      try {
+        const res = await fetch(APP.apiBase + '/api/policies/' + id + '/download', {
+          headers: { 'Authorization': 'Bearer ' + APP.token }
+        });
+        if (!res.ok) throw new Error('Could not open file');
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        if (forceDownload) {
+          const cd = res.headers.get('Content-Disposition') || '';
+          const match = cd.match(/filename="?([^"]+)"?/);
+          const filename = match ? match[1] : 'policy-document';
+          const a = document.createElement('a');
+          a.href = blobUrl; a.download = filename;
+          document.body.appendChild(a); a.click(); a.remove();
+        } else {
+          window.open(blobUrl, '_blank');
+        }
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      } catch (e) {
+        toast('Could not open file', 'error');
+      }
+    }
+
     function openAddPolicyModal() {
       document.getElementById('addPolicyModalBody').innerHTML = `
-<div class="form-group"><label>Policy Name *</label><input class="form-control" id="pol_name"/></div>
+<div class="form-group"><label>Policy Title *</label><input class="form-control" id="pol_title" placeholder="Leave Policy 2026"/></div>
 <div class="form-group"><label>Category</label><input class="form-control" id="pol_cat" placeholder="HR Policy, IT Policy..."/></div>
 <div class="form-group"><label>Description</label><textarea class="form-control" id="pol_desc" rows="2" style="resize:vertical;"></textarea></div>
-<div class="form-group"><label>Google Drive Link</label><input class="form-control" id="pol_url" placeholder="https://drive.google.com/..."/></div>
-<div class="form-group"><label>Icon (emoji)</label><input class="form-control" id="pol_icon" value="📄"/></div>
+
+<div class="section-heading">Source</div>
+<div style="display:flex;gap:10px;margin-bottom:16px;">
+  <button type="button" class="btn btn-primary" id="pol_tab_upload" onclick="setPolicySourceTab('upload')" style="flex:1;">📁 Upload from Computer</button>
+  <button type="button" class="btn btn-ghost" id="pol_tab_link" onclick="setPolicySourceTab('link')" style="flex:1;">🔗 Google Drive Link</button>
+</div>
+
+<div id="pol_upload_pane">
+  <div class="form-group">
+    <label>Choose File (PDF, DOC, DOCX, or Image) *</label>
+    <input class="form-control" id="pol_file" type="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.gif,.webp"/>
+  </div>
+  <div id="pol_progress_wrap" style="display:none;margin-bottom:14px;">
+    <div style="height:8px;background:var(--surface2);border-radius:6px;overflow:hidden;">
+      <div id="pol_progress_bar" style="height:100%;width:0%;background:var(--accent);transition:width .15s;"></div>
+    </div>
+    <div id="pol_progress_label" style="font-size:11px;color:var(--text3);margin-top:4px;">Uploading…</div>
+  </div>
+</div>
+
+<div id="pol_link_pane" style="display:none;">
+  <div class="form-group"><label>Google Drive URL *</label><input class="form-control" id="pol_url" placeholder="https://drive.google.com/..."/></div>
+</div>
+
 <div style="display:flex;gap:10px;margin-top:16px;">
-  <button class="btn btn-success" onclick="savePolicy()">Add Policy</button>
+  <button class="btn btn-success" id="pol_save_btn" onclick="savePolicy()">Add Policy</button>
+  <button class="btn btn-ghost" onclick="closeModal('addPolicyModal')">Cancel</button>
+</div>`;
+      APP._policySourceTab = 'upload';
+      document.getElementById('addPolicyModal').classList.add('active');
+    }
+
+    function setPolicySourceTab(tab) {
+      APP._policySourceTab = tab;
+      document.getElementById('pol_upload_pane').style.display = tab === 'upload' ? '' : 'none';
+      document.getElementById('pol_link_pane').style.display = tab === 'link' ? '' : 'none';
+      document.getElementById('pol_tab_upload').className = tab === 'upload' ? 'btn btn-primary' : 'btn btn-ghost';
+      document.getElementById('pol_tab_link').className = tab === 'link' ? 'btn btn-primary' : 'btn btn-ghost';
+    }
+
+    function savePolicy() {
+      const title = (document.getElementById('pol_title').value || '').trim();
+      if (!title) { toast('Policy title required', 'error'); return; }
+      const category = document.getElementById('pol_cat').value;
+      const description = document.getElementById('pol_desc').value;
+
+      if (APP._policySourceTab === 'link') {
+        const url = (document.getElementById('pol_url').value || '').trim();
+        if (!url) { toast('Google Drive URL required', 'error'); return; }
+        saveLinkPolicy(title, category, description, url);
+      } else {
+        const fileInput = document.getElementById('pol_file');
+        const file = fileInput?.files?.[0];
+        if (!file) { toast('Please choose a file to upload', 'error'); return; }
+        uploadFilePolicy(title, category, description, file);
+      }
+    }
+
+    async function saveLinkPolicy(title, category, description, drive_url) {
+      try {
+        await apiCall('POST', '/api/policies/link', { title, category, description, drive_url });
+        closeModal('addPolicyModal');
+        toast('Policy added — visible to all employees', 'success');
+        await fetchAllData();
+        navigateTo('policies');
+      } catch (e) {
+        toast('Error: ' + (e.message || 'Could not add policy'), 'error');
+      }
+    }
+
+    function uploadFilePolicy(title, category, description, file) {
+      const progressWrap = document.getElementById('pol_progress_wrap');
+      const progressBar = document.getElementById('pol_progress_bar');
+      const progressLabel = document.getElementById('pol_progress_label');
+      const saveBtn = document.getElementById('pol_save_btn');
+      progressWrap.style.display = '';
+      saveBtn.disabled = true;
+
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('category', category || '');
+      formData.append('description', description || '');
+      formData.append('file', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', APP.apiBase + '/api/policies/upload');
+      if (APP.token) xhr.setRequestHeader('Authorization', 'Bearer ' + APP.token);
+
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
+          progressBar.style.width = pct + '%';
+          progressLabel.textContent = 'Uploading… ' + pct + '%';
+        }
+      };
+      xhr.onload = async function () {
+        saveBtn.disabled = false;
+        if (xhr.status >= 200 && xhr.status < 300) {
+          progressLabel.textContent = 'Done!';
+          closeModal('addPolicyModal');
+          toast('Policy uploaded — visible to all employees', 'success');
+          await fetchAllData();
+          navigateTo('policies');
+        } else {
+          let detail = 'Upload failed';
+          try { detail = JSON.parse(xhr.responseText).detail || detail; } catch (e) { }
+          toast('Error: ' + detail, 'error');
+          progressWrap.style.display = 'none';
+        }
+      };
+      xhr.onerror = function () {
+        saveBtn.disabled = false;
+        progressWrap.style.display = 'none';
+        toast('Upload failed — check your connection', 'error');
+      };
+      xhr.send(formData);
+    }
+
+    function editPolicy(id) {
+      const p = APP.policies.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('addPolicyModalBody').innerHTML = `
+<div class="form-group"><label>Policy Title *</label><input class="form-control" id="pol_edit_title" value="${p.title}"/></div>
+<div class="form-group"><label>Category</label><input class="form-control" id="pol_edit_cat" value="${p.category || ''}"/></div>
+<div class="form-group"><label>Description</label><textarea class="form-control" id="pol_edit_desc" rows="2" style="resize:vertical;">${p.description || ''}</textarea></div>
+<p style="font-size:12px;color:var(--text3);margin-bottom:14px;">To replace the file itself, delete this policy and add it again.</p>
+<div style="display:flex;gap:10px;margin-top:16px;">
+  <button class="btn btn-success" onclick="saveEditPolicy(${id})">Save Changes</button>
   <button class="btn btn-ghost" onclick="closeModal('addPolicyModal')">Cancel</button>
 </div>`;
       document.getElementById('addPolicyModal').classList.add('active');
     }
 
-    function savePolicy() {
-      const name = document.getElementById('pol_name').value;
-      if (!name) { toast('Policy name required', 'error'); return; }
-      const policy = {
-        id: Date.now(),
-        name,
-        category: document.getElementById('pol_cat').value,
-        description: document.getElementById('pol_desc').value,
-        url: document.getElementById('pol_url').value || '#',
-        icon: document.getElementById('pol_icon').value || '📄'
-      };
-      APP.policies.push(policy);
-      localStorage.setItem('hrc_policies', JSON.stringify(APP.policies));
-      // Sync to Google Sheets so ALL users see it
-      if (APP.scriptUrl) {
-        postToScript({ action: 'savePolicies', policies: APP.policies }).catch(() => { });
+    async function saveEditPolicy(id) {
+      const title = (document.getElementById('pol_edit_title').value || '').trim();
+      if (!title) { toast('Policy title required', 'error'); return; }
+      try {
+        await apiCall('PATCH', '/api/policies/' + id, {
+          title,
+          category: document.getElementById('pol_edit_cat').value,
+          description: document.getElementById('pol_edit_desc').value,
+        });
+        closeModal('addPolicyModal');
+        toast('Policy updated', 'success');
+        await fetchAllData();
+        navigateTo('policies');
+      } catch (e) {
+        toast('Error: ' + (e.message || 'Could not update policy'), 'error');
       }
-      closeModal('addPolicyModal'); toast('Policy added — visible to all users', 'success'); navigateTo('policies');
     }
-    function deletePolicy(id) {
-      APP.policies = APP.policies.filter(p => p.id !== id);
-      localStorage.setItem('hrc_policies', JSON.stringify(APP.policies));
-      if (APP.scriptUrl) {
-        postToScript({ action: 'savePolicies', policies: APP.policies }).catch(() => { });
+
+    async function deletePolicy(id) {
+      if (!confirm('Delete this policy? This cannot be undone.')) return;
+      try {
+        await apiCall('DELETE', '/api/policies/' + id);
+        toast('Policy removed', 'success');
+        await fetchAllData();
+        navigateTo('policies');
+      } catch (e) {
+        toast('Error: ' + (e.message || 'Could not delete policy'), 'error');
       }
-      toast('Policy removed', 'success'); navigateTo('policies');
     }
 
     // ===================== FORMATS =====================
@@ -6030,10 +6148,10 @@ function testFullFlow() {
   <div class="card-header"><span class="card-title">📜 Company Policies</span></div>
   <div class="card-body">
     <div class="policy-grid">
-      ${APP.policies.map(p => `<div class="policy-card" onclick="window.open('${p.url}','_blank')">
-        <div class="pc-icon">${p.icon}</div>
-        <div class="pc-cat">${p.category}</div>
-        <div class="pc-name">${p.name}</div>
+      ${APP.policies.map(p => `<div class="policy-card" onclick="viewPolicy(${p.id})">
+        <div class="pc-icon">${p.filename ? (p.filename.toLowerCase().endsWith('.pdf') ? '📕' : /\.(png|jpg|jpeg|gif|webp)$/i.test(p.filename) ? '🖼️' : '📝') : '🔗'}</div>
+        <div class="pc-cat">${p.category || 'Policy'}</div>
+        <div class="pc-name">${p.title}</div>
       </div>`).join('')}
     </div>
   </div>

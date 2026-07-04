@@ -9,7 +9,7 @@ from app.database import get_db
 from app.models.form_submission import FormSubmission
 from app.models.employee import Employee
 from app.models.user import User
-from app.auth import get_current_user, require_hr_admin, require_hr_doc
+from app.auth import get_current_user, require_hr_admin, require_hr_doc, create_employee_login
 
 router = APIRouter(prefix="/api/inbox", tags=["Form Inbox"])
 
@@ -180,6 +180,10 @@ def approve_submission(
         inbox_status     = "Approved",
     )
     db.add(emp)
+    db.flush()  # emp.employee_code / emp.name / emp.date_of_birth now populated
+
+    # ── Auto-create the employee's login account ──────────────────────────
+    user, initial_password = create_employee_login(db, emp)
 
     # Mark submission as approved
     s.status       = 'approved'
@@ -193,7 +197,12 @@ def approve_submission(
 
     db.commit()
     db.refresh(emp)
-    return {"message": f"Approved — employee {payload.employee_code} created", "employee_code": payload.employee_code}
+    return {
+        "message": f"Approved — employee {payload.employee_code} created",
+        "employee_code": payload.employee_code,
+        "login_username": user.username,
+        "initial_password": initial_password,
+    }
 
 # ── REJECT ────────────────────────────────────────────────
 @router.post("/{submission_id}/reject")
