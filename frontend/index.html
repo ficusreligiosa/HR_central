@@ -2096,7 +2096,7 @@
       user: null, companyName: 'HR Central',
       apiBase: window.location.origin,
       token: null,
-      g1: [], g2: [], g3: [], formInbox: [], users: [], policies: [], formats: [], orgChart: null, performanceReviews: [],
+      g1: [], g2: [], formInbox: [], users: [], policies: [], formats: [], orgChart: null, performanceReviews: [],
       currentPage: '', sidebarCollapsed: false
     };
 
@@ -2206,10 +2206,6 @@
       { "Sl No": 1, "Enter Employee Code": "G2-001", "Name": "Sunita Rao", "Father/Husband Name": "Krishnamurthy Rao", "Employee Type": "G2", "DOB(As per Adhar)": "14/05/1994", "Date Of Joining": "10/07/2023", "Marital Status": "Single", "Contact Number": "9543210987", "E-mail ID (Personal)": "sunita.rao@gmail.com", "Department": "Sales", "Designation": "Sales Executive", "Reporting Supervisor": "Rahul Verma", "Aadhar": "7890 1234 5678", "PAN": "RSTUV3456W", "Bank Name": "Axis Bank", "Bank Account No.": "345678901234", "IFSC CODE": "UTIB0002345", "Qualification": "BBA", "Gender": "Female", "Age": 30, "Status": "Active", "Basic": 18000, "HRA": 7200, "Monthly (Gross)": 28000, "File Number": "FN-G2-001", "Source": "Google Form", "ApprovedBy": "Harsh Kumar", "CreatedAt": "2023-07-10" },
       { "Sl No": 2, "Enter Employee Code": "G2-002", "Name": "Deepak Nair", "Father/Husband Name": "Gopalakrishnan Nair", "Employee Type": "G2", "DOB(As per Adhar)": "30/09/1993", "Date Of Joining": "20/08/2023", "Marital Status": "Married", "Contact Number": "9432109876", "E-mail ID (Personal)": "deepak.nair@gmail.com", "Department": "Operations", "Designation": "Operations Executive", "Reporting Supervisor": "Amit Sharma", "Aadhar": "2345 6789 0123", "PAN": "XYZAB6789C", "Bank Name": "Kotak Bank", "Bank Account No.": "567890123456", "IFSC CODE": "KKBK0003456", "Qualification": "B.Com", "Gender": "Male", "Age": 31, "Status": "Active", "Basic": 16000, "HRA": 6400, "Monthly (Gross)": 25000, "File Number": "FN-G2-002", "Source": "Manual", "ApprovedBy": "Harsh Kumar", "CreatedAt": "2023-08-20" }
     ];
-    const SAMPLE_G3 = [
-      { "Sl No": 1, "Enter Employee Code": "G3-001", "Name": "Kavita Singh", "Father/Husband Name": "Mohan Singh", "Employee Type": "G3", "DOB(As per Adhar)": "25/12/1999", "Date Of Joining": "01/11/2023", "Marital Status": "Single", "Contact Number": "9321098765", "E-mail ID (Personal)": "kavita.singh@gmail.com", "Department": "Technology", "Designation": "Trainee Developer", "Reporting Supervisor": "Amit Sharma", "Aadhar": "8901 2345 6789", "PAN": "DEFGH0123I", "Bank Name": "HDFC Bank", "Bank Account No.": "789012345678", "IFSC CODE": "HDFC0004567", "Qualification": "B.Tech", "Gender": "Female", "Age": 25, "Status": "Active", "Basic": 12000, "HRA": 4800, "Monthly (Gross)": 18000, "File Number": "FN-G3-001", "Source": "Google Form", "ApprovedBy": "Harsh Kumar", "CreatedAt": "2023-11-01" },
-      { "Sl No": 2, "Enter Employee Code": "G3-002", "Name": "Arjun Kapoor", "Father/Husband Name": "Sunil Kapoor", "Employee Type": "G3", "DOB(As per Adhar)": "10/04/2000", "Date Of Joining": "15/12/2023", "Marital Status": "Single", "Contact Number": "9210987654", "E-mail ID (Personal)": "arjun.kapoor@gmail.com", "Department": "Sales", "Designation": "Trainee Sales", "Reporting Supervisor": "Sunita Rao", "Aadhar": "3456 7890 1234", "PAN": "JKLMN4567O", "Bank Name": "SBI", "Bank Account No.": "901234567890", "IFSC CODE": "SBIN0005678", "Qualification": "BBA", "Gender": "Male", "Age": 24, "Status": "Active", "Basic": 10000, "HRA": 4000, "Monthly (Gross)": 15000, "File Number": "FN-G3-002", "Source": "Manual", "ApprovedBy": "Admin", "CreatedAt": "2023-12-15" }
-    ];
     const SAMPLE_INBOX = [
       { id: "FR001", "Timestamp": "2024-01-15 10:30", "Name": "Neha Gupta", "Father's Name": "Ramesh Gupta", "Date of Birth": "18/06/1996", "Date of Joining": "01/02/2024", "Marital Status": "Single", "Gender": "Female", "Contact Number": "9109876543", "Email": "neha.gupta@gmail.com", "Adhar card Number": "5678 9012 3456", "Pan Number": "PQRST7890U", "Bank Name": "ICICI Bank", "Bank Account Number": "12345678901234", "IFSC Code": "ICIC0006789", "Last qualification Certificate": "MBA Marketing", "Blood Group": "O+", "Emergency Contact Number": "9898989898", "Emergency contact person Name": "Ramesh Gupta", "Relation with Employee.": "Father", "Is PF Deducted": "Yes", "Is ESIC Deducted": "Yes", status: "pending", empCode: null },
       { id: "FR002", "Timestamp": "2024-01-10 14:15", "Name": "Vikram Joshi", "Father's Name": "Govind Joshi", "Date of Birth": "22/03/1991", "Date of Joining": "15/01/2024", "Marital Status": "Married", "Gender": "Male", "Contact Number": "9098765432", "Email": "vikram.joshi@gmail.com", "Adhar card Number": "6789 0123 4567", "Pan Number": "VWXYZ8901A", "Bank Name": "SBI", "Bank Account Number": "56789012345678", "IFSC Code": "SBIN0007890", "Last qualification Certificate": "B.Tech Mechanical", "Blood Group": "A+", "Is PF Deducted": "Yes", "Is ESIC Deducted": "No", status: "approved", empCode: "G1-004" },
@@ -2259,7 +2255,6 @@
         { label: "Performance", icon: "📊", page: "performance", section: "HR Tools" },
         { label: "Reports", icon: "📈", page: "reports", section: "Analytics" },
         { label: "Policies", icon: "📜", page: "policies", section: "Company" },
-        { label: "Formats", icon: "📁", page: "formats", section: "Company" },
         { label: "Org Chart", icon: "🏢", page: "orgChart", section: "Company" }
       ],
       doc: [
@@ -2267,14 +2262,12 @@
         { label: "Employees", icon: "👥", page: "masterDB", section: "Main" },
         { label: "Document Tracking", icon: "📋", page: "docTracking", section: "Tools" },
         { label: "Policies", icon: "📜", page: "policies", section: "Company" },
-        { label: "Formats", icon: "📁", page: "formats", section: "Company" },
         { label: "Org Chart", icon: "🏢", page: "orgChart", section: "Company" }
       ],
       emp: [
         { label: "Employee Portal", icon: "🏠", page: "empPortal", section: "My Space" },
         { label: "Performance", icon: "📊", page: "performance", section: "My Space" },
         { label: "Policies", icon: "📜", page: "policies", section: "Company" },
-        { label: "Formats", icon: "📁", page: "formats", section: "Company" },
         { label: "Org Chart", icon: "🏢", page: "orgChart", section: "Company" }
       ]
     };
@@ -2360,7 +2353,7 @@
     function doLogout() {
       APP.user = null;
       APP.token = null;
-      APP.g1 = []; APP.g2 = []; APP.g3 = [];
+      APP.g1 = []; APP.g2 = [];
       sessionStorage.removeItem('hrc_token');
       sessionStorage.removeItem('hrc_user');
       document.getElementById('appShell').classList.remove('active');
@@ -2398,7 +2391,7 @@
       const titles = {
         dashboard: ['Dashboard', 'Overview & Analytics'],
         formInbox: ['Form Inbox', 'Review new employee submissions'],
-        masterDB: ['Employee Database', 'All employees across G1, G2, G3'],
+        masterDB: ['Employee Database', 'All employees across G1, G2'],
         salary: ['Salary Manager', 'Manage employee compensation'],
         performance: ['Performance', 'Employee performance reviews and KPI ratings'],
         docTracking: ['Document Tracking', 'Nupur\'s section — track employee documents'],
@@ -2477,16 +2470,14 @@
           if (APP.currentPage) navigateTo(APP.currentPage);
           return;
         }
-        const [g1, g2, g3, inbox, performance] = await Promise.all([
+        const [g1, g2, inbox, performance] = await Promise.all([
           apiCall('GET', '/api/employees/?type=G1&limit=500'),
           apiCall('GET', '/api/employees/?type=G2&limit=500'),
-          apiCall('GET', '/api/employees/?type=G3&limit=500'),
           role === 'admin' || role === 'hr' ? apiCall('GET', '/api/inbox/') : Promise.resolve([]),
           role === 'admin' || role === 'hr' ? apiCall('GET', '/api/performance/') : Promise.resolve([]),
         ]);
         APP.g1 = (g1 || []).map(mapEmployee);
         APP.g2 = (g2 || []).map(mapEmployee);
-        APP.g3 = (g3 || []).map(mapEmployee);
         APP.formInbox = (inbox || []).map(mapInboxItem);
         APP.performanceReviews = performance || [];
         renderSidebarNav();
@@ -2597,7 +2588,7 @@
 
     // ===================== DASHBOARD =====================
     function renderDashboard() {
-      const all = [...APP.g1, ...APP.g2, ...APP.g3];
+      const all = [...APP.g1, ...APP.g2];
       const pending = APP.formInbox.filter(f => f.status === 'pending').length;
       return `
 <div class="stats-grid">
@@ -2619,12 +2610,7 @@
     <div class="stat-value">${APP.g2.length}</div>
     <div class="stat-sub">Contract employees</div>
   </div>
-  <div class="stat-card c-purple">
-    <div class="stat-icon">🎓</div>
-    <div class="stat-label">G3 Trainees</div>
-    <div class="stat-value">${APP.g3.length}</div>
-    <div class="stat-sub">Interns & trainees</div>
-  </div>
+  
   <div class="stat-card c-red">
     <div class="stat-icon">📥</div>
     <div class="stat-label">Pending Inbox</div>
@@ -2706,7 +2692,7 @@
       if (role !== 'admin' && role !== 'hr') return `<div class="empty-state"><div class="empty-icon">🔒</div><h3>Access Denied</h3><p>This section is available to HR and Admin only.</p></div>`;
 
       // Auto-match pending entries against existing employees in DB (client-side, no server needed)
-      const allEmp = [...APP.g1, ...APP.g2, ...APP.g3];
+      const allEmp = [...APP.g1, ...APP.g2];
       APP.formInbox.forEach(function (f) {
         if (f.status !== 'pending') return;
         const match = allEmp.find(function (e) {
@@ -2938,7 +2924,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
         return '<div class="form-group"><label>' + label + '</label><input class="form-control read-only-field" value="' + (val || '—') + '" readonly/></div>';
       }
 
-      const existingDepts = [...new Set([...APP.g1, ...APP.g2, ...APP.g3].map(e => e.Department).filter(Boolean))];
+      const existingDepts = [...new Set([...APP.g1, ...APP.g2].map(e => e.Department).filter(Boolean))];
       const defaultDepts = ['Technology', 'Human Resources', 'Finance', 'Sales', 'Operations', 'Marketing', 'Legal', 'Admin', 'Office'];
       const allDepts = [...new Set([...defaultDepts, ...existingDepts])].sort();
 
@@ -2982,7 +2968,6 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
         '<option value="">Select type</option>' +
         '<option value="G1">G1 — Permanent</option>' +
         '<option value="G2">G2 — Contract</option>' +
-        '<option value="G3">G3 — Trainee</option>' +
         '</select></div>' +
         '<div class="form-group"><label>Department *</label>' +
         '<select class="form-control" id="approveDept" onchange="toggleCustomDept(this.value)">' +
@@ -3064,7 +3049,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       const pending = APP.formInbox.filter(f => f.status === 'pending');
       if (!pending.length) { toast('No pending submissions', 'info'); return; }
 
-      const existingDepts = [...new Set([...APP.g1, ...APP.g2, ...APP.g3].map(e => e.Department).filter(Boolean))];
+      const existingDepts = [...new Set([...APP.g1, ...APP.g2].map(e => e.Department).filter(Boolean))];
       const defaultDepts = ['Technology', 'Human Resources', 'Finance', 'Sales', 'Operations', 'Marketing', 'Legal', 'Admin', 'Office'];
       const allDepts = [...new Set([...defaultDepts, ...existingDepts])].sort();
 
@@ -3074,7 +3059,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
           '<td><input class="form-control" id="b_code_' + i + '" placeholder="e.g. SP0' + String(46 + i) + '" style="min-width:100px;"/></td>' +
           '<td><select class="form-control" id="b_type_' + i + '">' +
           '<option value="">Type</option>' +
-          '<option value="G1">G1</option><option value="G2">G2</option><option value="G3">G3</option>' +
+          '<option value="G1">G1</option><option value="G2">G2</option>' +
           '</select></td>' +
           '<td>' +
           '<select class="form-control" id="b_dept_' + i + '" onchange="bulkToggleDept(this,' + i + ')" style="min-width:130px;">' +
@@ -3128,7 +3113,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
         if (!f) continue;
         const dobFmt = fmtDate(f["Date of Birth"]);
         const age = dobFmt && /^\d{2}-\d{2}-\d{4}$/.test(dobFmt) ? calcAge(dobFmt) : 0;
-        const sheet = empType === 'G1' ? APP.g1 : empType === 'G2' ? APP.g2 : APP.g3;
+        const sheet = empType === 'G1' ? APP.g1 : APP.g2;
         const today = (function () { const n = new Date(); return String(n.getDate()).padStart(2, '0') + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + n.getFullYear(); })();
         const empRow = {
           "Sl No": sheet.length + 1, "Enter Employee Code": empCode, "Name": f.Name,
@@ -3159,7 +3144,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     let dbFilter = 'all'; APP._deptFilter = ''; APP._statusFilter = 'all';
     function renderMasterDB() {
       const role = APP.user?.role, canAdd = role === 'admin' || role === 'hr';
-      const all = [...APP.g1, ...APP.g2, ...APP.g3];
+      const all = [...APP.g1, ...APP.g2];
       const activeCount = all.filter(e => e.Status === 'Active').length;
       const inactiveCount = all.filter(e => e.Status && e.Status !== 'Active').length;
       return `
@@ -3180,7 +3165,6 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     <button class="tab-btn ${dbFilter === 'all' ? 'active' : ''}" onclick="filterDB('all',this)">All (${all.length})</button>
     <button class="tab-btn ${dbFilter === 'G1' ? 'active' : ''}" onclick="filterDB('G1',this)">G1 (${APP.g1.length})</button>
     <button class="tab-btn ${dbFilter === 'G2' ? 'active' : ''}" onclick="filterDB('G2',this)">G2 (${APP.g2.length})</button>
-    <button class="tab-btn ${dbFilter === 'G3' ? 'active' : ''}" onclick="filterDB('G3',this)">G3 (${APP.g3.length})</button>
     <button class="tab-btn ${APP._statusFilter === 'active' ? 'active' : ''}" onclick="filterDBStatus('active',this)">✅ Active (${activeCount})</button>
     <button class="tab-btn ${APP._statusFilter === 'inactive' ? 'active' : ''}" onclick="filterDBStatus('inactive',this)">❌ Inactive (${inactiveCount})</button>
   </div>
@@ -3196,7 +3180,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     }
 
     function renderDBTable() {
-      let employees = dbFilter === 'all' ? [...APP.g1, ...APP.g2, ...APP.g3] : dbFilter === 'G1' ? APP.g1 : dbFilter === 'G2' ? APP.g2 : APP.g3;
+      let employees = dbFilter === 'all' ? [...APP.g1, ...APP.g2] : dbFilter === 'G1' ? APP.g1 : APP.g2;
       const search = document.getElementById('dbSearch')?.value?.toLowerCase() || '';
       if (search) employees = employees.filter(e => (e.Name || '').toLowerCase().includes(search) || (e['Enter Employee Code'] || '').toLowerCase().includes(search) || (e['E-mail ID (Personal)'] || '').toLowerCase().includes(search) || (e.Department || '').toLowerCase().includes(search));
       if (APP._deptFilter) employees = employees.filter(e => e.Department === APP._deptFilter);
@@ -3217,7 +3201,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
         return codeA.localeCompare(codeB);
       });
       if (!employees.length) return `<div class="empty-state" style="padding:40px;"><div class="empty-icon">🔍</div><h3>No employees found</h3></div>`;
-      const typeColors = { G1: 'badge-green', G2: 'badge-yellow', G3: 'badge-purple' };
+      const typeColors = { G1: 'badge-green', G2: 'badge-yellow' };
       const role = APP.user?.role;
       const canChangeStatus = role === 'admin' || role === 'hr';
       return `<table><thead><tr>
@@ -3280,7 +3264,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     }
 
     async function changeEmpStatus(empCode, type, newStatus) {
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === empCode);
       if (emp) emp.Status = newStatus;
       toast(`Status updated to "${newStatus}"`, 'success');
@@ -3293,7 +3277,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       const newStatus = selectEl.value;
       // Update dropdown color class
       selectEl.className = `status-select status-${newStatus.toLowerCase().replace(/\s/g, '-')}`;
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === empCode);
       if (emp) emp.Status = newStatus;
       toast(`Status updated to "${newStatus}"`, 'success');
@@ -3306,7 +3290,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     function viewEmployee(code, type) { currentEmpCode = code; currentEmpType = type; navigateTo('empDetail'); }
 
     function renderEmpDetail() {
-      const sheet = currentEmpType === 'G1' ? APP.g1 : currentEmpType === 'G2' ? APP.g2 : APP.g3;
+      const sheet = currentEmpType === 'G1' ? APP.g1 : APP.g2;
       const e = sheet.find(x => x['Enter Employee Code'] === currentEmpCode);
       if (!e) return `<div class="empty-state"><div class="empty-icon">❓</div><h3>Employee not found</h3></div>`;
       const role = APP.user?.role, canEditBasic = role === 'admin' || role === 'hr', canEditSalary = role === 'admin' || role === 'hr', canEditDoc = role === 'admin' || role === 'doc';
@@ -3333,7 +3317,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       const salELOn = e['Has EL'] !== 'No';
       const salCLOn = e['Has CL'] !== 'No';
       const salInsurOn = e['Has Insurance'] !== 'No';
-      const typeColor = { G1: 'badge-green', G2: 'badge-yellow', G3: 'badge-purple' };
+      const typeColor = { G1: 'badge-green', G2: 'badge-yellow' };
       return `
 <div style="margin-bottom:16px;"><button class="btn btn-ghost btn-sm" onclick="navigateTo('masterDB')">← Back to Database</button></div>
 <div style="background:linear-gradient(135deg,var(--accent) 0%,#3db89e 100%);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:24px;color:white;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden;">
@@ -3550,7 +3534,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       const tog = (id) => document.getElementById(id)?.checked ?? true;
       const basic = g('dsal_basic'), hra = g('dsal_hra'), other = g('dsal_other');
       const gross = basic + hra + other;
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === code);
       if (emp) {
         emp['Basic'] = basic; emp['HRA'] = hra; emp['other'] = other;
@@ -3583,7 +3567,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       const g = (id) => parseFloat(document.getElementById(id)?.value) || 0;
       const basic = g('sal_Basic'), hra = g('sal_HRA'), other = g('sal_other'), med = g('sal_Med__Allow'), spl = g('sal_Spl_Alw'), misc = g('sal_Misc_Allow'), fixed = g('sal_Fixed_Other_All'), variable = g('sal_Variable__p_a__');
       const gross = basic + hra + other + med + spl + misc + fixed;
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === code);
       if (emp) { emp.Basic = basic; emp.HRA = hra; emp.other = other; emp['Med. Allow'] = med; emp['Spl Alw'] = spl; emp['Misc Allow'] = misc; emp['Fixed Other All'] = fixed; emp['Variable (p.a.)'] = variable; emp['Monthly (Gross)'] = gross; }
       if (APP.scriptUrl) { try { await postToScript({ action: 'saveSalary', empCode: code, type, basic, hra, gross }); } catch (e) { } }
@@ -3591,7 +3575,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     }
 
     async function saveEmpDocs(code, type) {
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === code);
       if (!emp) return;
       DOC_FIELDS.forEach(field => {
@@ -3606,7 +3590,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
 
     // ===================== ADD EMPLOYEE =====================
     function openAddEmpModal() {
-      const existingDepts2 = [...new Set([...APP.g1, ...APP.g2, ...APP.g3].map(e => e.Department).filter(Boolean))];
+      const existingDepts2 = [...new Set([...APP.g1, ...APP.g2].map(e => e.Department).filter(Boolean))];
       const depts = ['Technology', 'Human Resources', 'Finance', 'Sales', 'Operations', 'Marketing', 'Legal', 'Admin', 'Office', ...existingDepts2].filter((v, i, a) => a.indexOf(v) === i).sort();
       document.getElementById('addEmpModalBody').innerHTML = `
 <div class="section-heading">Personal Information</div>
@@ -3634,7 +3618,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
 <div class="section-heading">Employment Details</div>
 <div class="form-grid">
   <div class="form-group"><label>Employee Code *</label><input class="form-control" id="ae_code" placeholder="e.g. G1-015"/></div>
-  <div class="form-group"><label>Employee Type *</label><select class="form-control" id="ae_type"><option value="">Select</option><option>G1</option><option>G2</option><option>G3</option></select></div>
+  <div class="form-group"><label>Employee Type *</label><select class="form-control" id="ae_type"><option value="">Select</option><option>G1</option><option>G2</option></select></div>
   <div class="form-group"><label>Date of Joining *</label><input class="form-control" id="ae_doj" type="text" placeholder="DD-MM-YYYY" maxlength="10" data-date/><div class="date-error"></div></div>
   <div class="form-group"><label>Department *</label><select class="form-control" id="ae_dept" onchange="if(this.value==='__other__'){document.getElementById('ae_custdept').style.display=''}else{document.getElementById('ae_custdept').style.display='none'}"><option value="">Select</option>${depts.map(d => `<option>${d}</option>`).join('')}<option value="__other__">✏️ Other (type below)</option></select></div>
   <div class="form-group" id="ae_custdept" style="display:none;"><label>Custom Department</label><input class="form-control" id="ae_custdept_input" placeholder="Type department name"/></div>
@@ -3662,7 +3646,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       if (dob && !dateRe.test(dob)) { toast('Date of Birth must be DD-MM-YYYY', 'error'); return; }
       if (doj && !dateRe.test(doj)) { toast('Date of Joining must be DD-MM-YYYY', 'error'); return; }
       const age = dob && dateRe.test(dob) ? calcAge(dob) : (parseInt(g('ae_age')) || 0);
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       let dept = g('ae_dept');
       if (dept === '__other__') dept = (document.getElementById('ae_custdept_input')?.value || '').trim();
       if (!dept) { toast('Please select or enter a department', 'error'); return; }
@@ -3677,7 +3661,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     function renderSalary() {
       const role = APP.user?.role;
       if (role !== 'admin' && role !== 'hr') return `<div class="empty-state"><div class="empty-icon">🔒</div><h3>Access Denied</h3></div>`;
-      const allEmp = [...APP.g1, ...APP.g2, ...APP.g3];
+      const allEmp = [...APP.g1, ...APP.g2];
       return `
 <div class="card mb-4">
   <div class="card-header"><span class="card-title">💰 Select Employee</span></div>
@@ -3703,7 +3687,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       const sel = document.getElementById('salaryEmpSelect').value;
       if (!sel) return;
       const [code, type] = sel.split('|');
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === code);
       if (!emp) return;
 
@@ -3951,7 +3935,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       const ctcPA = ctcPM * 12;
       const takeHome = totalGross - pfEE - esicEE;
 
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === code);
       if (emp) {
         emp['Basic'] = basic; emp['HRA'] = hra; emp['Spl Alw'] = spl;
@@ -3994,7 +3978,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
 
     // ===================== PERFORMANCE =====================
     function getAllEmployees() {
-      return [...APP.g1, ...APP.g2, ...APP.g3];
+      return [...APP.g1, ...APP.g2];
     }
 
     function getEmployeeNameByCode(code) {
@@ -4330,7 +4314,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
     function renderDocTracking() {
       const role = APP.user?.role;
       if (role !== 'admin' && role !== 'doc') return `<div class="empty-state"><div class="empty-icon">🔒</div><h3>Access Denied</h3></div>`;
-      const allEmp = [...APP.g1, ...APP.g2, ...APP.g3];
+      const allEmp = [...APP.g1, ...APP.g2];
       const docCols = DOC_FIELDS.slice(0, 12);
       return `
 <div class="search-bar">
@@ -4339,7 +4323,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
     <input class="search-input" id="docSearch" placeholder="Search employees..." oninput="filterDocTable(this.value)"/>
   </div>
   <select class="form-control" style="width:auto;" onchange="filterDocType(this.value)">
-    <option value="">All Types</option><option>G1</option><option>G2</option><option>G3</option>
+    <option value="">All Types</option><option>G1</option><option>G2</option>
   </select>
 </div>
 <div class="card">
@@ -4382,18 +4366,18 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
     }
 
     function filterDocTable(search) {
-      const allEmp = [...APP.g1, ...APP.g2, ...APP.g3].filter(e => (e.Name || '').toLowerCase().includes(search.toLowerCase()));
+      const allEmp = [...APP.g1, ...APP.g2].filter(e => (e.Name || '').toLowerCase().includes(search.toLowerCase()));
       document.getElementById('docTableBody').innerHTML = renderDocRows(allEmp, DOC_FIELDS.slice(0, 12));
     }
     function filterDocType(type) {
-      const allEmp = type ? (type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3) : [...APP.g1, ...APP.g2, ...APP.g3];
+      const allEmp = type ? (type === 'G1' ? APP.g1 : APP.g2) : [...APP.g1, ...APP.g2];
       document.getElementById('docTableBody').innerHTML = renderDocRows(allEmp, DOC_FIELDS.slice(0, 12));
     }
 
     async function saveDocCell(code, type, field, el) {
       const val = el.value;
       if (el.tagName === 'SELECT') el.className = `doc-select ${val === 'Received' ? 'received' : val === 'Pending' ? 'pending' : val === 'Not Applicable' ? 'na' : ''}`;
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === code);
       if (emp) emp[field] = val;
       if (APP.scriptUrl) { try { await postToScript({ action: 'updateDocField', empCode: code, type, fieldName: field, value: val }); } catch (e) { } }
@@ -4402,7 +4386,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
 
     // ===================== KRA & DOCUMENT UPLOAD =====================
     function renderKraUpload() {
-      const allEmp = [...APP.g1, ...APP.g2, ...APP.g3];
+      const allEmp = [...APP.g1, ...APP.g2];
       const KRA_DOC_FIELDS = [
         { key: 'KRA', label: 'KRA (Key Result Areas)', icon: '🎯', hint: 'Paste Google Drive link to KRA document' },
         { key: 'KPI', label: 'KPI (Key Performance Indicators)', icon: '📊', hint: 'Paste Google Drive link to KPI document' },
@@ -4440,7 +4424,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       const sel = document.getElementById('kraEmpSelect').value;
       if (!sel) return;
       const [code, type] = sel.split('|');
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === code);
       if (!emp) return;
 
@@ -4499,7 +4483,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
     }
 
     async function saveKraDocs(code, type) {
-      const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+      const sheet = type === 'G1' ? APP.g1 : APP.g2;
       const emp = sheet.find(e => e['Enter Employee Code'] === code);
       if (!emp) return;
 
@@ -4540,7 +4524,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         '<button class="btn btn-secondary" style="border-color:var(--accent);color:var(--accent);" onclick="downloadSalaryTemplate()">💰 Salary Template</button>' +
         '</div>' +
         '<div style="margin-top:14px;padding:12px 16px;background:var(--blue-lt);border:1.5px solid rgba(59,111,212,0.25);border-radius:8px;font-size:12px;color:#1e3a6e;">' +
-        '<strong>📋 Template columns:</strong> Employee Code, Name, Father\'s Name, Date of Birth (DD-MM-YYYY), Date of Joining (DD-MM-YYYY), Gender, Marital Status, Contact, Email, Aadhar, PAN, Bank Name, Account No, IFSC, Qualification, Blood Group, Emergency Contact, Emergency Person, Relation, Is PF Deducted, Is ESIC Deducted, <strong>Employee Type (G1/G2/G3)</strong>, Department, Designation, Reporting Supervisor' +
+        '<strong>📋 Template columns:</strong> Employee Code, Name, Father\'s Name, Date of Birth (DD-MM-YYYY), Date of Joining (DD-MM-YYYY), Gender, Marital Status, Contact, Email, Aadhar, PAN, Bank Name, Account No, IFSC, Qualification, Blood Group, Emergency Contact, Emergency Person, Relation, Is PF Deducted, Is ESIC Deducted, <strong>Employee Type (G1/G2)</strong>, Department, Designation, Reporting Supervisor' +
         '</div>' +
         '</div>' +
         '</div>' +
@@ -4643,14 +4627,13 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         html += '<span style="font-size:12px;color:var(--text3);">' + headers.length + ' columns</span>';
 
         // Count by type
-        const byType = { G1: 0, G2: 0, G3: 0, unknown: 0 };
+        const byType = { G1: 0, G2: 0, unknown: 0 };
         objects.forEach(function (o) {
           const t = o['Employee Type'];
-          if (t === 'G1') byType.G1++; else if (t === 'G2') byType.G2++; else if (t === 'G3') byType.G3++; else byType.unknown++;
+          if (t === 'G1') byType.G1++; else if (t === 'G2') byType.G2++; else byType.unknown++;
         });
         if (byType.G1) html += '<span class="badge badge-green">G1: ' + byType.G1 + '</span>';
         if (byType.G2) html += '<span class="badge badge-yellow">G2: ' + byType.G2 + '</span>';
-        if (byType.G3) html += '<span class="badge badge-purple">G3: ' + byType.G3 + '</span>';
         if (byType.unknown) html += '<span class="badge badge-red">⚠️ No Type: ' + byType.unknown + '</span>';
         html += '</div>';
 
@@ -4662,7 +4645,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
             return '<tr>' + visibleCols.map(function (c) {
               let v = o[c] || '—';
               if (c === 'Date of Birth' || c === 'Date of Joining') v = fmtDate(v);
-              if (c === 'Employee Type') return '<td><span class="badge ' + (v === 'G1' ? 'badge-green' : v === 'G2' ? 'badge-yellow' : 'badge-purple') + '">' + v + '</span></td>';
+              if (c === 'Employee Type') return '<td><span class="badge ' + (v === 'G1' ? 'badge-green' : v === 'G2' ? 'badge-yellow' : 'badge-red') + '">' + v + '</span></td>';
               return '<td style="font-size:12px;">' + v + '</td>';
             }).join('') + '<td style="color:var(--text4);">…</td></tr>';
           }).join('') +
@@ -4671,7 +4654,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         if (objects.length > 8) html += '<p style="font-size:12px;color:var(--text3);margin-bottom:10px;">Showing first 8 of ' + objects.length + ' rows</p>';
 
         if (byType.unknown > 0) {
-          html += '<div style="background:var(--yellow-lt);border:1.5px solid rgba(196,134,10,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:12px;">⚠️ ' + byType.unknown + ' rows have no Employee Type (G1/G2/G3) — they will be skipped. Fix the CSV and re-upload.</div>';
+          html += '<div style="background:var(--yellow-lt);border:1.5px solid rgba(196,134,10,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:12px;">⚠️ ' + byType.unknown + ' rows have an invalid or missing Employee Type (only G1/G2 are supported) — they will be skipped. Fix the CSV and re-upload.</div>';
         }
 
         html += '<button class="btn btn-success" style="margin-top:4px;" onclick="importCSV()">✅ Import All ' + objects.length + ' Employees</button></div>';
@@ -4689,10 +4672,10 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       APP._csvData.rows.forEach(function (row) {
         // Accept both BULK_IMPORT_HEADERS format and SHEET_HEADERS format
         const type = row['Employee Type'] || row['type'] || '';
-        if (!type || !['G1', 'G2', 'G3'].includes(type)) { fail++; failReasons.push((row['Name'] || '?') + ': missing Employee Type'); return; }
+        if (!type || !['G1', 'G2'].includes(type)) { fail++; failReasons.push((row['Name'] || '?') + ': missing or unsupported Employee Type (only G1/G2 allowed)'); return; }
         if (!row['Name'] && !row['Enter Employee Code']) { fail++; return; }
 
-        const sheet = type === 'G1' ? APP.g1 : type === 'G2' ? APP.g2 : APP.g3;
+        const sheet = type === 'G1' ? APP.g1 : APP.g2;
         const code = row['Enter Employee Code'] || '';
 
         // Normalise dates
@@ -4777,13 +4760,13 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       </div>
       <div class="form-group">
         <label>Employee Type</label>
-        <select class="form-control" id="rptEmpType"><option value="">All</option><option>G1</option><option>G2</option><option>G3</option></select>
+        <select class="form-control" id="rptEmpType"><option value="">All</option><option>G1</option><option>G2</option></select>
       </div>
       <div class="form-group">
         <label>Department</label>
         <select class="form-control" id="rptDept">
           <option value="">All Departments</option>
-          ${[...new Set([...APP.g1, ...APP.g2, ...APP.g3].map(e => e.Department).filter(Boolean))].map(d => `<option>${d}</option>`).join('')}
+          ${[...new Set([...APP.g1, ...APP.g2].map(e => e.Department).filter(Boolean))].map(d => `<option>${d}</option>`).join('')}
         </select>
       </div>
       <div class="form-group">
@@ -4813,7 +4796,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       const empType = document.getElementById('rptEmpType').value;
       const dept = document.getElementById('rptDept').value;
       const status = document.getElementById('rptStatus')?.value || '';
-      let employees = empType ? (empType === 'G1' ? APP.g1 : empType === 'G2' ? APP.g2 : APP.g3) : [...APP.g1, ...APP.g2, ...APP.g3];
+      let employees = empType ? (empType === 'G1' ? APP.g1 : APP.g2) : [...APP.g1, ...APP.g2];
       if (dept) employees = employees.filter(e => e.Department === dept);
       if (status) employees = employees.filter(e => e.Status === status);
       let cols = [], title = '';
@@ -4851,7 +4834,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       toast('CSV exported', 'success');
     }
     function exportCSV() {
-      const allEmp = [...APP.g1, ...APP.g2, ...APP.g3];
+      const allEmp = [...APP.g1, ...APP.g2];
       const rows = allEmp.map(e => SHEET_HEADERS.map(h => `"${(e[h] || '').toString().replace(/"/g, '""')}"`).join(','));
       const csv = 'data:text/csv;charset=utf-8,' + [SHEET_HEADERS.join(','), ...rows].join('\n');
       const link = document.createElement('a'); link.href = encodeURI(csv); link.download = 'employees.csv'; link.click();
@@ -4929,7 +4912,10 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
 
     // ===================== FORMATS =====================
     function renderFormats() {
-      const canManage = APP.user?.role === 'admin' || APP.user?.role === 'hr';
+      if (APP.user?.role !== 'admin') {
+        return '<div class="empty-state"><div class="empty-icon">🔒</div><h3>Admin Only</h3><p style="color:var(--text3);font-size:13px;">This section is restricted to admin.</p></div>';
+      }
+      const canManage = true;
       const addBtn = canManage ? '<button class="btn btn-primary" onclick="openAddFormatModal()">➕ Add Format</button>' : '';
       let body = '';
       if (!APP.formats.length) {
@@ -5283,7 +5269,7 @@ var SHEET_HEADERS = [
 
 var LOG_HEADERS  = ["FormRowID","Status","EmpCode","AssignedType","ApprovedBy","Timestamp","Reason"];
 var USER_HEADERS = ["Username","Password","Role","DisplayName","Active"];
-var VALID_TYPES  = ["G1","G2","G3"];
+var VALID_TYPES  = ["G1","G2"];
 
 // ── SETUP — RUN THIS FIRST ─────────────────────────────────
 function setupEverything() {
@@ -5377,7 +5363,7 @@ function setupEverything() {
 function checkSetup() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var lines = ["=== HR Central Health Check ===", ""];
-  var required = ["G1","G2","G3","FormInboxLog","Users","Settings","Policies"];
+  var required = ["G1","G2","FormInboxLog","Users","Settings","Policies"];
   var i, s;
   for (i = 0; i < required.length; i++) {
     s = ss.getSheetByName(required[i]);
@@ -5524,7 +5510,6 @@ function getAllData(formTab) {
   return {
     g1:        sheetToArray("G1"),
     g2:        sheetToArray("G2"),
-    g3:        sheetToArray("G3"),
     formInbox: getFormInboxData(formTab || "Form Responses 1"),
     users:     sheetToArray("Users"),
     policies:  getPolicies()
@@ -5593,7 +5578,7 @@ function getFormInboxData(tabName) {
       var sh = allSheets[si];
       var shName = sh.getName();
       // Skip our own sheets
-      if (["G1","G2","G3","FormInboxLog","Users","Settings","Policies"].indexOf(shName) >= 0) continue;
+      if (["G1","G2","FormInboxLog","Users","Settings","Policies"].indexOf(shName) >= 0) continue;
       if (sh.getLastRow() >= 2) {
         var firstCell = sh.getRange(1,1).getValue();
         if (String(firstCell).toLowerCase().indexOf("timestamp") >= 0 ||
@@ -5815,7 +5800,7 @@ function addUser(body) {
 // ── TEST FUNCTION ──────────────────────────────────────────
 function testFullFlow() {
   var results = [], i, s, r, d, addR, sheet, rowIdx;
-  var required = ["G1","G2","G3","FormInboxLog","Users","Settings","Policies"];
+  var required = ["G1","G2","FormInboxLog","Users","Settings","Policies"];
   for (i = 0; i < required.length; i++) {
     try {
       s = getSheet(required[i]);
@@ -5828,7 +5813,7 @@ function testFullFlow() {
   } catch(e) { results.push("FAIL Login: " + e.message); }
   try {
     d = getAllData("Form Responses 1");
-    results.push("OK getAllData: G1=" + d.g1.length + " G2=" + d.g2.length + " G3=" + d.g3.length);
+    results.push("OK getAllData: G1=" + d.g1.length + " G2=" + d.g2.length);
   } catch(e) { results.push("FAIL getAllData: " + e.message); }
   try {
     var testEmp = {"Employee Type":"G1","Enter Employee Code":"TEST-001","Name":"Test Employee","Status":"Active","Source":"Test","CreatedAt":new Date().toISOString()};
@@ -5893,7 +5878,7 @@ function testFullFlow() {
       <li>Grant permissions when prompted (Review permissions → Advanced → Allow)</li>
       <li>A popup will appear: <em>"✅ Setup Complete!"</em> — it lists every tab that was created</li>
     </ol>
-    <div style="font-size:12px;color:var(--text3);margin-top:8px;">This creates: G1, G2, G3, FormInboxLog, Users (with 4 default logins), Settings tabs — with all correct headers and formatting.</div>
+    <div style="font-size:12px;color:var(--text3);margin-top:8px;">This creates: G1, G2, FormInboxLog, Users (with 4 default logins), Settings tabs — with all correct headers and formatting.</div>
   </div>
 </div>
 
@@ -5973,7 +5958,7 @@ function testFullFlow() {
         const data = await res.json();
         if (data.sheets) {
           const sheets = data.sheets;
-          const formSheets = sheets.filter(s => !['G1', 'G2', 'G3', 'FormInboxLog', 'Users', 'Settings', 'Policies'].includes(s));
+          const formSheets = sheets.filter(s => !['G1', 'G2', 'FormInboxLog', 'Users', 'Settings', 'Policies'].includes(s));
           let html = '<div style="margin-top:12px;padding:14px;background:var(--surface3);border-radius:8px;font-size:13px;">';
           html += '<div style="font-weight:700;color:var(--text);margin-bottom:8px;">📋 All sheets in your Google Sheet:</div>';
           html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">';
@@ -6018,7 +6003,7 @@ function testFullFlow() {
     function copyAppsScript() { navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(() => toast('Apps Script code copied!', 'success')); }
     function copyHeaders(type) {
       let text = '';
-      if (type === 'G1/G2/G3 Headers') text = SHEET_HEADERS.join('\t');
+      if (type === 'G1/G2 Headers') text = SHEET_HEADERS.join('\t');
       else if (type === 'FormInboxLog') text = 'FormRowID\tStatus\tEmpCode\tAssignedType\tApprovedBy\tTimestamp\tReason';
       else if (type === 'Users') text = 'Username\tPassword\tRole\tDisplayName\tActive';
       navigator.clipboard.writeText(text).then(() => toast(type + ' copied!', 'success'));
@@ -6031,22 +6016,13 @@ function testFullFlow() {
   <h2>👋 Welcome, ${APP.user?.displayName}!</h2>
   <p>Access your resources, company policies, and onboarding materials here.</p>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-  <div class="card">
-    <div class="card-header"><span class="card-title">📋 Induction Form</span></div>
-    <div class="card-body">
-      <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Fill your employee onboarding form. Your data will be submitted to HR.</p>
-      <a class="btn btn-primary" href="${APP.gformUrl || 'https://forms.google.com'}" target="_blank">Open Induction Form →</a>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><span class="card-title">📞 HR Contact</span></div>
-    <div class="card-body">
-      <div style="font-size:13px;line-height:2;color:var(--text2);">
-        <div><strong style="color:var(--text);">HR Manager:</strong> Harsh Kumar</div>
-        <div><strong style="color:var(--text);">Document Manager:</strong> Nupur Pandey</div>
-        <div><strong style="color:var(--text);">HR Email:</strong> hr@company.com</div>
-      </div>
+<div class="card mb-4">
+  <div class="card-header"><span class="card-title">📞 HR Contact</span></div>
+  <div class="card-body">
+    <div style="font-size:13px;line-height:2;color:var(--text2);">
+      <div><strong style="color:var(--text);">HR Manager:</strong> Harsh Kumar</div>
+      <div><strong style="color:var(--text);">Document Manager:</strong> Nupur Pandey</div>
+      <div><strong style="color:var(--text);">HR Email:</strong> hr@company.com</div>
     </div>
   </div>
 </div>
