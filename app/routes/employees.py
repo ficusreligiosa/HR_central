@@ -56,6 +56,60 @@ class EmployeeCreate(BaseModel):
     has_el: Optional[bool] = True
     has_cl: Optional[bool] = True
 
+    # ── Extended HR fields ──────────────────────────────────────────────
+    doc_medical_certificate: Optional[str] = "Pending"
+
+    emergency_contact_number: Optional[str] = None
+    emergency_contact_person: Optional[str] = None
+    emergency_relation: Optional[str] = None
+
+    med_allowance: Optional[float] = 0
+    misc_allowance: Optional[float] = 0
+    fixed_other_allowance: Optional[float] = 0
+    variable_pay_annual: Optional[float] = 0
+    esi_employer_contribution: Optional[float] = 0
+    pf_employer_contribution: Optional[float] = 0
+    esic_employee_deduction: Optional[float] = 0
+    pf_employee_deduction: Optional[float] = 0
+
+    insurance_amount: Optional[float] = 0
+    bonus_amount: Optional[float] = 0
+    gratuity_amount: Optional[float] = 0
+    pl_amount: Optional[float] = 0
+    cl_amount: Optional[float] = 0
+
+    doc_personal_details: Optional[str] = "Pending"
+    doc_form_26: Optional[str] = "Pending"
+    doc_esi_form1: Optional[str] = "Pending"
+    doc_form2_pf: Optional[str] = "Pending"
+    doc_nomination_form_f: Optional[str] = "Pending"
+    doc_epf_form11: Optional[str] = "Pending"
+    doc_joining_report: Optional[str] = "Pending"
+    doc_rules_regulation_ack: Optional[str] = "Pending"
+    doc_appointment_letter: Optional[str] = "Pending"
+    doc_confirmation_letter: Optional[str] = "Pending"
+    doc_service_record: Optional[str] = "Pending"
+    doc_increment_letter: Optional[str] = "Pending"
+    doc_promotion_letter: Optional[str] = "Pending"
+    doc_employment_history_sheet: Optional[str] = "Pending"
+    doc_jd: Optional[str] = "Pending"
+    doc_master_task_sheet: Optional[str] = "Pending"
+    doc_kra: Optional[str] = "Pending"
+    doc_kpi: Optional[str] = "Pending"
+
+    asset_sim: Optional[str] = "Pending"
+    asset_laptop: Optional[str] = "Pending"
+
+    file_number: Optional[str] = None
+    date_of_leaving: Optional[str] = None
+    full_final_completed: Optional[str] = "Pending"
+    relieving_letter_issued: Optional[str] = "Pending"
+    remarks: Optional[str] = None
+    address_verification_link: Optional[str] = None
+
+    source: Optional[str] = None
+    approved_by: Optional[str] = None
+
 class EmployeeUpdate(BaseModel):
     name: Optional[str] = None
     employee_type: Optional[str] = None
@@ -100,6 +154,60 @@ class EmployeeUpdate(BaseModel):
     has_gratuity: Optional[bool] = None
     has_el: Optional[bool] = None
     has_cl: Optional[bool] = None
+
+    # ── Extended HR fields ──────────────────────────────────────────────
+    doc_medical_certificate: Optional[str] = None
+
+    emergency_contact_number: Optional[str] = None
+    emergency_contact_person: Optional[str] = None
+    emergency_relation: Optional[str] = None
+
+    med_allowance: Optional[float] = None
+    misc_allowance: Optional[float] = None
+    fixed_other_allowance: Optional[float] = None
+    variable_pay_annual: Optional[float] = None
+    esi_employer_contribution: Optional[float] = None
+    pf_employer_contribution: Optional[float] = None
+    esic_employee_deduction: Optional[float] = None
+    pf_employee_deduction: Optional[float] = None
+
+    insurance_amount: Optional[float] = None
+    bonus_amount: Optional[float] = None
+    gratuity_amount: Optional[float] = None
+    pl_amount: Optional[float] = None
+    cl_amount: Optional[float] = None
+
+    doc_personal_details: Optional[str] = None
+    doc_form_26: Optional[str] = None
+    doc_esi_form1: Optional[str] = None
+    doc_form2_pf: Optional[str] = None
+    doc_nomination_form_f: Optional[str] = None
+    doc_epf_form11: Optional[str] = None
+    doc_joining_report: Optional[str] = None
+    doc_rules_regulation_ack: Optional[str] = None
+    doc_appointment_letter: Optional[str] = None
+    doc_confirmation_letter: Optional[str] = None
+    doc_service_record: Optional[str] = None
+    doc_increment_letter: Optional[str] = None
+    doc_promotion_letter: Optional[str] = None
+    doc_employment_history_sheet: Optional[str] = None
+    doc_jd: Optional[str] = None
+    doc_master_task_sheet: Optional[str] = None
+    doc_kra: Optional[str] = None
+    doc_kpi: Optional[str] = None
+
+    asset_sim: Optional[str] = None
+    asset_laptop: Optional[str] = None
+
+    file_number: Optional[str] = None
+    date_of_leaving: Optional[str] = None
+    full_final_completed: Optional[str] = None
+    relieving_letter_issued: Optional[str] = None
+    remarks: Optional[str] = None
+    address_verification_link: Optional[str] = None
+
+    source: Optional[str] = None
+    approved_by: Optional[str] = None
 
 @router.get("/meta/stats")
 def get_stats(db: Session = Depends(get_db), current_user: User = Depends(require_hr_doc)):
