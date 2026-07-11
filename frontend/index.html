@@ -958,6 +958,37 @@
       max-width: 880px;
     }
 
+    .modal-xl {
+      max-width: 1100px;
+      width: 95vw;
+    }
+
+    .modal-body-viewer {
+      padding: 0;
+      height: 78vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-body-viewer iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #525659;
+    }
+
+    .modal-body-viewer .viewer-fallback {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 40px;
+      text-align: center;
+      color: var(--text3);
+    }
+
     .modal-header {
       padding: 20px 24px;
       border-bottom: 1px solid var(--border);
@@ -2015,6 +2046,17 @@
         <button class="btn btn-ghost btn-sm" onclick="closeModal('performanceModal')">✕</button>
       </div>
       <div class="modal-body" id="performanceModalBody"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="policyViewerModal">
+    <div class="modal modal-xl">
+      <div class="modal-header">
+        <span class="modal-title" id="policyViewerTitle">📄 Policy</span>
+        <button class="btn btn-ghost btn-sm" id="policyViewerDownloadBtn" onclick="downloadPolicy(APP.viewingPolicyId)">⬇️ Download</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('policyViewerModal')">✕</button>
+      </div>
+      <div class="modal-body modal-body-viewer" id="policyViewerBody"></div>
     </div>
   </div>
 
@@ -5128,11 +5170,74 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         '</div>' + body;
     }
 
+    // Converts a normal Google Drive share link into an embeddable /preview
+    // link. Returns null if the URL isn't a recognizable Drive file link.
+    function toEmbeddableDriveUrl(url) {
+      const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (!m) return null;
+      return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+    }
+
+    function isPreviewableFile(filename) {
+      if (!filename) return false;
+      return /\.(pdf|png|jpg|jpeg|gif|webp|txt)$/i.test(filename);
+    }
+
     function viewPolicy(id) {
       const p = APP.policies.find(x => x.id === id);
       if (!p) return;
-      if (p.drive_url) { window.open(p.drive_url, '_blank'); return; }
-      openAuthedPolicyFile(id, false);
+      APP.viewingPolicyId = id;
+      document.getElementById('policyViewerTitle').textContent = '📄 ' + p.title;
+      const body = document.getElementById('policyViewerBody');
+      const downloadBtn = document.getElementById('policyViewerDownloadBtn');
+
+      if (p.drive_url) {
+        downloadBtn.style.display = 'none'; // no server-side file to download for Drive links
+        const embedUrl = toEmbeddableDriveUrl(p.drive_url);
+        if (embedUrl) {
+          body.innerHTML = '<iframe src="' + embedUrl + '" allow="autoplay"></iframe>';
+        } else {
+          body.innerHTML = '<div class="viewer-fallback"><div style="font-size:40px;">🔗</div>' +
+            '<p>This Google Drive link can\'t be previewed inline.</p>' +
+            '<a class="btn btn-primary btn-sm" href="' + p.drive_url + '" target="_blank" rel="noopener">Open in Google Drive</a></div>';
+        }
+        document.getElementById('policyViewerModal').classList.add('active');
+        return;
+      }
+
+      downloadBtn.style.display = '';
+      if (!isPreviewableFile(p.filename)) {
+        body.innerHTML = '<div class="viewer-fallback"><div style="font-size:40px;">📁</div>' +
+          '<p>Preview isn\'t available for this file type.</p>' +
+          '<button class="btn btn-primary btn-sm" onclick="downloadPolicy(' + id + ')">⬇️ Download instead</button></div>';
+        document.getElementById('policyViewerModal').classList.add('active');
+        return;
+      }
+
+      body.innerHTML = '<div class="viewer-fallback"><div style="font-size:40px;">⏳</div><p>Loading document…</p></div>';
+      document.getElementById('policyViewerModal').classList.add('active');
+      loadPolicyIntoViewer(id, p.filename);
+    }
+
+    async function loadPolicyIntoViewer(id, filename) {
+      const body = document.getElementById('policyViewerBody');
+      try {
+        const res = await fetch(APP.apiBase + '/api/policies/' + id + '/download', {
+          headers: { 'Authorization': 'Bearer ' + APP.token }
+        });
+        if (!res.ok) throw new Error('Could not open file');
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        APP.viewingPolicyBlobUrl = blobUrl;
+        if (/\.(png|jpg|jpeg|gif|webp)$/i.test(filename || '')) {
+          body.innerHTML = '<div style="flex:1;display:flex;align-items:center;justify-content:center;background:#525659;overflow:auto;"><img src="' + blobUrl + '" style="max-width:100%;max-height:100%;object-fit:contain;"/></div>';
+        } else {
+          body.innerHTML = '<iframe src="' + blobUrl + '"></iframe>';
+        }
+      } catch (e) {
+        body.innerHTML = '<div class="viewer-fallback"><div style="font-size:40px;">⚠️</div><p>Could not load this document.</p>' +
+          '<button class="btn btn-primary btn-sm" onclick="downloadPolicy(' + id + ')">⬇️ Try downloading instead</button></div>';
+      }
     }
 
     function downloadPolicy(id) {
@@ -6495,10 +6600,14 @@ function testFullFlow() {
   <div class="card-header"><span class="card-title">📜 Company Policies</span></div>
   <div class="card-body">
     <div class="policy-grid">
-      ${APP.policies.map(p => `<div class="policy-card" onclick="viewPolicy(${p.id})">
+      ${APP.policies.map(p => `<div class="policy-card">
         <div class="pc-icon">${p.filename ? (p.filename.toLowerCase().endsWith('.pdf') ? '📕' : /\.(png|jpg|jpeg|gif|webp)$/i.test(p.filename) ? '🖼️' : '📝') : '🔗'}</div>
         <div class="pc-cat">${p.category || 'Policy'}</div>
         <div class="pc-name">${p.title}</div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();viewPolicy(${p.id})">👁️ View</button>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();downloadPolicy(${p.id})">⬇️ Download</button>
+        </div>
       </div>`).join('')}
     </div>
   </div>
@@ -6506,7 +6615,16 @@ function testFullFlow() {
     }
 
     // ===================== MODALS & TOAST =====================
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+      if (id === 'policyViewerModal') {
+        document.getElementById('policyViewerBody').innerHTML = '';
+        if (APP.viewingPolicyBlobUrl) {
+          URL.revokeObjectURL(APP.viewingPolicyBlobUrl);
+          APP.viewingPolicyBlobUrl = null;
+        }
+      }
+    }
     document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); }));
 
     function toast(msg, type = 'info') {
