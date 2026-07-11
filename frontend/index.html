@@ -2400,45 +2400,70 @@
 
     // ===================== API =====================
     async function fetchAllData() {
-      try {
-        const role = APP.user?.role;
-        if (role === 'emp') {
-          const [performance, policies, notices, hrContact] = await Promise.all([
-            apiCall('GET', '/api/performance/'),
-            apiCall('GET', '/api/policies/'),
-            apiCall('GET', '/api/notices/'),
-            apiCall('GET', '/api/settings/hr-contact'),
-          ]);
-          APP.performanceReviews = performance || [];
-          APP.policies = policies || [];
-          APP.notices = notices || [];
-          APP.hrContact = hrContact || null;
-          renderSidebarNav();
-          if (APP.currentPage) navigateTo(APP.currentPage);
-          return;
-        }
-        const [g1, g2, inbox, performance, policies, notices, hrContact] = await Promise.all([
-          apiCall('GET', '/api/employees/?type=G1&limit=500'),
-          apiCall('GET', '/api/employees/?type=G2&limit=500'),
-          role === 'admin' || role === 'hr' ? apiCall('GET', '/api/inbox/') : Promise.resolve([]),
-          role === 'admin' || role === 'hr' ? apiCall('GET', '/api/performance/') : Promise.resolve([]),
-          apiCall('GET', '/api/policies/'),
-          apiCall('GET', '/api/notices/'),
-          apiCall('GET', '/api/settings/hr-contact'),
-        ]);
-        APP.g1 = (g1 || []).map(mapEmployee);
-        APP.g2 = (g2 || []).map(mapEmployee);
-        APP.formInbox = (inbox || []).map(mapInboxItem);
-        APP.performanceReviews = performance || [];
-        APP.policies = policies || [];
-        APP.notices = notices || [];
-        APP.hrContact = hrContact || null;
+      // Helper: run a set of named API calls with Promise.allSettled so that
+      // one failing endpoint (e.g. a 403/500) never blocks the others from
+      // rendering. Returns { values: {key: data}, failures: [key, ...] }.
+      async function settleCalls(callMap) {
+        const keys = Object.keys(callMap);
+        const results = await Promise.allSettled(keys.map(k => callMap[k]));
+        const values = {};
+        const failures = [];
+        results.forEach((r, i) => {
+          const key = keys[i];
+          if (r.status === 'fulfilled') {
+            values[key] = r.value;
+          } else {
+            values[key] = null;
+            failures.push(key);
+            console.error(`fetchAllData: "${key}" failed:`, r.reason);
+          }
+        });
+        return { values, failures };
+      }
+
+      const role = APP.user?.role;
+
+      if (role === 'emp') {
+        const { values, failures } = await settleCalls({
+          performance: apiCall('GET', '/api/performance/'),
+          policies: apiCall('GET', '/api/policies/'),
+          notices: apiCall('GET', '/api/notices/'),
+          hrContact: apiCall('GET', '/api/settings/hr-contact'),
+        });
+        APP.performanceReviews = values.performance || [];
+        APP.policies = values.policies || [];
+        APP.notices = values.notices || [];
+        APP.hrContact = values.hrContact || null;
         renderSidebarNav();
         if (APP.currentPage) navigateTo(APP.currentPage);
+        if (failures.length) {
+          toast(`Some data couldn't load (${failures.join(', ')})`, 'error');
+        }
+        return;
+      }
+
+      const { values, failures } = await settleCalls({
+        g1: apiCall('GET', '/api/employees/?type=G1&limit=500'),
+        g2: apiCall('GET', '/api/employees/?type=G2&limit=500'),
+        inbox: role === 'admin' || role === 'hr' ? apiCall('GET', '/api/inbox/') : Promise.resolve([]),
+        performance: role === 'admin' || role === 'hr' ? apiCall('GET', '/api/performance/') : Promise.resolve([]),
+        policies: apiCall('GET', '/api/policies/'),
+        notices: apiCall('GET', '/api/notices/'),
+        hrContact: apiCall('GET', '/api/settings/hr-contact'),
+      });
+      APP.g1 = (values.g1 || []).map(mapEmployee);
+      APP.g2 = (values.g2 || []).map(mapEmployee);
+      APP.formInbox = (values.inbox || []).map(mapInboxItem);
+      APP.performanceReviews = values.performance || [];
+      APP.policies = values.policies || [];
+      APP.notices = values.notices || [];
+      APP.hrContact = values.hrContact || null;
+      renderSidebarNav();
+      if (APP.currentPage) navigateTo(APP.currentPage);
+      if (failures.length) {
+        toast(`Some data couldn't load (${failures.join(', ')})`, 'error');
+      } else {
         toast('Data loaded', 'success');
-      } catch (e) {
-        console.error('fetchAllData error:', e);
-        toast('Could not load data from server', 'error');
       }
     }
 
