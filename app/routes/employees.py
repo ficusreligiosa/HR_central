@@ -287,17 +287,22 @@ def get_employee(employee_code: str, db: Session = Depends(get_db), current_user
 def create_employee(payload: EmployeeCreate, db: Session = Depends(get_db), current_user: User = Depends(require_hr_admin)):
     existing = db.query(Employee).filter(Employee.employee_code == payload.employee_code).first()
     if existing:
-        raise HTTPException(status_code=400, detail="Employee code already exists")
+        # Upsert: update existing employee fields
+        for field, value in payload.model_dump(exclude_unset=True).items():
+            setattr(existing, field, value)
+        emp = existing
+    else:
+        emp = Employee(**payload.model_dump())
+        db.add(emp)
 
-    emp = Employee(**payload.model_dump())
-    db.add(emp)
     db.flush()
 
-    # ── Auto-create the employee's login account ──────────────────────────
+    # ── Auto-create (or refresh) the employee's login account ────────────
     user, initial_password = create_employee_login(db, emp)
 
     db.commit()
-    db.refresh(emp)
+    if not existing:
+        db.refresh(emp)
 
     return {
         **jsonable_encoder(emp),

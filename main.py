@@ -23,6 +23,28 @@ from app.routes.settings import router as settings_router
 # ── Create tables ──────────────────────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
 
+# ── Migrate varchar columns to TEXT ────────────────────────────────────────
+def migrate_columns():
+    """Alter known small varchar columns to TEXT so long PANs, doc URLs etc fit."""
+    from sqlalchemy import text
+    db = SessionLocal()
+    try:
+        cols = [
+            "pan_number", "contact", "emergency_contact_number",
+            "aadhar_number", "ifsc_code",
+        ]
+        for col in cols:
+            try:
+                db.execute(text(f"ALTER TABLE employees ALTER COLUMN {col} TYPE TEXT"))
+            except Exception:
+                pass  # already TEXT or doesn't exist
+        db.commit()
+        print("✅ DB columns migrated to TEXT")
+    finally:
+        db.close()
+
+migrate_columns()
+
 # ── Seed default users ─────────────────────────────────────────────────────
 def seed_users():
     from app.auth import hash_password
