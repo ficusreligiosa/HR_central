@@ -5025,7 +5025,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       if (type === 'float') { const n = parseFloat(v.replace(/,/g, '')); return isNaN(n) ? 0 : n; }
       if (type === 'int') { const n = parseInt(v.replace(/,/g, ''), 10); return isNaN(n) ? null : n; }
       if (type === 'bool') { return /^(yes|y|true|1)$/i.test(v); }
-      if (type === 'date') { return v ? fmtDate(v) : ''; }
+      if (type === 'date') { return v ? fmtDate(v) : null; }
       if (type === 'emptype') { return normalizeEmployeeType(v); }
       return v; // str
     }

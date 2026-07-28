@@ -25,13 +25,15 @@ Base.metadata.create_all(bind=engine)
 
 # ── Migrate varchar columns to TEXT ────────────────────────────────────────
 def migrate_columns():
-    """Alter known small varchar columns to TEXT so long PANs, doc URLs etc fit."""
+    """Alter known small varchar/date columns to TEXT so long PANs, doc URLs, empty dates etc fit."""
     from sqlalchemy import text
     db = SessionLocal()
     try:
         cols = [
             "pan_number", "contact", "emergency_contact_number",
             "aadhar_number", "ifsc_code",
+            "date_of_birth", "date_of_joining", "probation_end",
+            "confirmation_date", "date_of_leaving",
         ]
         for col in cols:
             try:
