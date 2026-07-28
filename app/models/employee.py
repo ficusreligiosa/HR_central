@@ -25,8 +25,8 @@ class Employee(Base):
 
     # Documents
     aadhar_number     = Column(String(20))
-    pan_number        = Column(String(15))
-    qualification     = Column(String(100))
+    pan_number        = Column(Text)
+    qualification     = Column(Text)
 
     # Bank
     bank_name         = Column(String(100))
@@ -64,25 +64,25 @@ class Employee(Base):
     has_cl            = Column(Boolean, default=True)
 
     # Document checklist
-    doc_aadhar        = Column(String(20), default="Pending")
-    doc_pan           = Column(String(20), default="Pending")
-    doc_photo         = Column(String(20), default="Pending")
-    doc_marksheet     = Column(String(20), default="Pending")
-    doc_experience    = Column(String(20), default="Pending")
-    doc_bank          = Column(String(20), default="Pending")
-    doc_offer_letter  = Column(String(20), default="Pending")
-    doc_joining_form  = Column(String(20), default="Pending")
+    doc_aadhar        = Column(Text, default="Pending")
+    doc_pan           = Column(Text, default="Pending")
+    doc_photo         = Column(Text, default="Pending")
+    doc_marksheet     = Column(Text, default="Pending")
+    doc_experience    = Column(Text, default="Pending")
+    doc_bank          = Column(Text, default="Pending")
+    doc_offer_letter  = Column(Text, default="Pending")
+    doc_joining_form  = Column(Text, default="Pending")
 
     # Inbox
     form_row_id       = Column(String(50))
-    inbox_status      = Column(String(20), default="Pending")
+    inbox_status      = Column(Text, default="Pending")
 
     # ── EXTENDED HR FIELDS ────────────────────────────────────────────────
     # Added to support the full legacy 78-column HR sheet structure so bulk
     # import can carry over every field the company already tracks.
 
     # Extra biodata / statutory doc
-    doc_medical_certificate = Column(String(20), default="Pending")
+    doc_medical_certificate = Column(Text, default="Pending")
 
     # Emergency contact (promised by the old bulk-import template but never
     # actually added to the model until now)
@@ -111,34 +111,34 @@ class Employee(Base):
 
     # Onboarding document checklist (each tracked as a status string, e.g.
     # "Pending" / "Received" / "Yes" / "No", matching the existing doc_* style)
-    doc_personal_details          = Column(String(20), default="Pending")
-    doc_form_26                   = Column(String(20), default="Pending")
-    doc_esi_form1                 = Column(String(20), default="Pending")
-    doc_form2_pf                  = Column(String(20), default="Pending")
-    doc_nomination_form_f         = Column(String(20), default="Pending")
-    doc_epf_form11                = Column(String(20), default="Pending")
-    doc_joining_report            = Column(String(20), default="Pending")
-    doc_rules_regulation_ack      = Column(String(20), default="Pending")
-    doc_appointment_letter        = Column(String(20), default="Pending")
-    doc_confirmation_letter       = Column(String(20), default="Pending")
-    doc_service_record            = Column(String(20), default="Pending")
-    doc_increment_letter          = Column(String(20), default="Pending")
-    doc_promotion_letter          = Column(String(20), default="Pending")
-    doc_employment_history_sheet  = Column(String(20), default="Pending")
-    doc_jd                        = Column(String(20), default="Pending")
-    doc_master_task_sheet         = Column(String(20), default="Pending")
-    doc_kra                       = Column(String(20), default="Pending")
-    doc_kpi                       = Column(String(20), default="Pending")
+    doc_personal_details          = Column(Text, default="Pending")
+    doc_form_26                   = Column(Text, default="Pending")
+    doc_esi_form1                 = Column(Text, default="Pending")
+    doc_form2_pf                  = Column(Text, default="Pending")
+    doc_nomination_form_f         = Column(Text, default="Pending")
+    doc_epf_form11                = Column(Text, default="Pending")
+    doc_joining_report            = Column(Text, default="Pending")
+    doc_rules_regulation_ack      = Column(Text, default="Pending")
+    doc_appointment_letter        = Column(Text, default="Pending")
+    doc_confirmation_letter       = Column(Text, default="Pending")
+    doc_service_record            = Column(Text, default="Pending")
+    doc_increment_letter          = Column(Text, default="Pending")
+    doc_promotion_letter          = Column(Text, default="Pending")
+    doc_employment_history_sheet  = Column(Text, default="Pending")
+    doc_jd                        = Column(Text, default="Pending")
+    doc_master_task_sheet         = Column(Text, default="Pending")
+    doc_kra                       = Column(Text, default="Pending")
+    doc_kpi                       = Column(Text, default="Pending")
 
     # Asset issuance tracking
-    asset_sim    = Column(String(20), default="Pending")
-    asset_laptop = Column(String(20), default="Pending")
+    asset_sim    = Column(Text, default="Pending")
+    asset_laptop = Column(Text, default="Pending")
 
     # Exit / lifecycle tracking
     file_number             = Column(String(50))
     date_of_leaving          = Column(String(20))
-    full_final_completed    = Column(String(20), default="Pending")
-    relieving_letter_issued = Column(String(20), default="Pending")
+    full_final_completed    = Column(Text, default="Pending")
+    relieving_letter_issued = Column(Text, default="Pending")
     remarks                 = Column(Text)
     address_verification_link = Column(String(500))
 

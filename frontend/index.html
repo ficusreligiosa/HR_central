@@ -2060,6 +2060,19 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="credentialsModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">🔑 New Employee Logins Created</span>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('credentialsModal')">✕</button>
+      </div>
+      <div class="modal-body" id="credentialsModalBody" style="max-height:60vh;overflow-y:auto;"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal('credentialsModal')">✅ Got it</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toastContainer"></div>
 
   <script>
@@ -3296,6 +3309,14 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     <option value="">All Departments</option>
     ${[...new Set(all.map(e => e.Department).filter(Boolean))].map(d => `<option>${d}</option>`).join('')}
   </select>
+  <select class="form-control" style="width:auto;" id="sortSelect" onchange="APP._sortBy=this.value;renderDBTableUpdate()">
+    <option value="code">Sort: Code</option>
+    <option value="name_asc">Sort: Name A→Z</option>
+    <option value="name_desc">Sort: Name Z→A</option>
+    <option value="dept">Sort: Department</option>
+    <option value="doj_new">Sort: DOJ (newest)</option>
+    <option value="doj_old">Sort: DOJ (oldest)</option>
+  </select>
   ${canAdd ? `<button class="btn btn-primary" onclick="openAddEmpModal()">➕ Add Employee</button>` : ''}
   <button class="btn btn-secondary" onclick="exportCSV()">📥 Export CSV</button>
 </div>
@@ -3325,11 +3346,17 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       if (APP._deptFilter) employees = employees.filter(e => e.Department === APP._deptFilter);
       if (APP._statusFilter === 'active') employees = employees.filter(e => e.Status === 'Active');
       else if (APP._statusFilter === 'inactive') employees = employees.filter(e => e.Status && e.Status !== 'Active');
-      // Sort by employee code numerically — handles G1-001, SP045, SP-024 etc
+      // Sort
+      const sortBy = APP._sortBy || 'code';
       employees = [...employees].sort((a, b) => {
+        if (sortBy === 'name_asc') return (a.Name || '').localeCompare(b.Name || '');
+        if (sortBy === 'name_desc') return (b.Name || '').localeCompare(a.Name || '');
+        if (sortBy === 'dept') return (a.Department || '').localeCompare(b.Department || '');
+        if (sortBy === 'doj_new') return (b['Date Of Joining'] || '').localeCompare(a['Date Of Joining'] || '');
+        if (sortBy === 'doj_old') return (a['Date Of Joining'] || '').localeCompare(b['Date Of Joining'] || '');
+        // default: employee code numeric
         const codeA = (a['Enter Employee Code'] || '').trim();
         const codeB = (b['Enter Employee Code'] || '').trim();
-        // Extract trailing number for proper numeric sort
         const mA = codeA.match(/^(.*?)(\d+)$/);
         const mB = codeB.match(/^(.*?)(\d+)$/);
         if (mA && mB) {
@@ -4681,7 +4708,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       ['Enter Employee Code', 'employee_code', 'str'],
       ['Name', 'name', 'str'],
       ['Father/Husband Name', 'father_name', 'str'],
-      ['Employee Type', 'employee_type', 'str'],
+      ['Employee Type', 'employee_type', 'emptype'],
       ['DOB(As per Adhar)', 'date_of_birth', 'date'],
       ['Date Of Joining', 'date_of_joining', 'date'],
       ['Marital Status', 'marital_status', 'str'],
@@ -4770,6 +4797,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       'account_number': ['Bank Account Number'],
       'ifsc_code': ['IFSC Code'],
       'qualification': ['Last qualification Certificate'],
+      'remarks': ['Remark'],
     };
 
     function renderBulkImport() {
@@ -4872,6 +4900,50 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       toast('Full template downloaded', 'success');
     }
 
+    // Proper RFC4180-style CSV parser — reads the WHOLE file as one string and
+    // tracks quote state character-by-character, so a quoted cell containing
+    // a comma OR a newline (very common in real exports — e.g. a header like
+    // "Monthly\n(Gross)", or an address/remarks field with embedded commas)
+    // is kept intact as ONE cell instead of corrupting the row/column
+    // alignment for everything after it.
+    function parseCSVFile(text) {
+      const rows = [];
+      let row = [], cell = '', inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i], next = text[i + 1];
+        if (inQuotes) {
+          if (c === '"' && next === '"') { cell += '"'; i++; }
+          else if (c === '"') { inQuotes = false; }
+          else { cell += c; }
+        } else {
+          if (c === '"') { inQuotes = true; }
+          else if (c === ',') { row.push(cell); cell = ''; }
+          else if (c === '\r') { /* skip, \n handles the break */ }
+          else if (c === '\n') { row.push(cell); cell = ''; rows.push(row); row = []; }
+          else { cell += c; }
+        }
+      }
+      // Flush the last cell/row if the file doesn't end with a newline
+      if (cell.length || row.length) { row.push(cell); rows.push(row); }
+      return rows.filter(r => r.some(v => (v || '').trim() !== ''));
+    }
+
+    // Collapses internal whitespace/newlines and trims — so header variants
+    // like "Employee  Type", "Marital Status ", or " ESI\n(Employers..."
+    // (all seen in real-world exports) normalize to the same clean string
+    // used in EMPLOYEE_IMPORT_MAP, instead of silently failing to match.
+    function normalizeHeader(h) {
+      return (h || '').replace(/\s+/g, ' ').trim();
+    }
+
+    // Canonicalizes messy Employee Type values ("G-1", "g 2", " G1 ", "G-2")
+    // down to "G1"/"G2". Returns '' if it can't confidently tell.
+    function normalizeEmployeeType(v) {
+      const clean = (v || '').toUpperCase().replace(/[^G12]/g, '');
+      if (clean === 'G1' || clean === 'G2') return clean;
+      return '';
+    }
+
     function parseCSVLine(line) {
       const result = [], re = /("(?:[^"]|"")*"|[^,]*),?/g;
       let m;
@@ -4889,15 +4961,15 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       const reader = new FileReader();
       reader.onload = function (e) {
         const text = e.target.result;
-        const lines = text.split(/\r?\n/).filter(l => l.trim());
-        if (lines.length < 2) { toast('CSV must have at least one data row', 'error'); return; }
-        const headers = parseCSVLine(lines[0]);
-        const dataRows = lines.slice(1).map(l => parseCSVLine(l));
+        const allRows = parseCSVFile(text);
+        if (allRows.length < 2) { toast('CSV must have at least one data row', 'error'); return; }
+        const headers = allRows[0].map(normalizeHeader);
+        const dataRows = allRows.slice(1);
 
         // Map to objects
         const objects = dataRows.map(function (row) {
           const obj = {};
-          headers.forEach(function (h, i) { obj[h] = row[i] || ''; });
+          headers.forEach(function (h, i) { obj[h] = (row[i] || '').trim(); });
           return obj;
         }).filter(function (o) { return o['Name'] || o['Enter Employee Code']; });
 
@@ -4909,10 +4981,10 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         html += '<span style="font-size:13px;color:var(--text2);"><strong>' + objects.length + '</strong> employees detected</span>';
         html += '<span style="font-size:12px;color:var(--text3);">' + headers.length + ' columns</span>';
 
-        // Count by type
+        // Count by type (normalized — "G-1"/"g 2"/etc all recognized)
         const byType = { G1: 0, G2: 0, unknown: 0 };
         objects.forEach(function (o) {
-          const t = o['Employee Type'];
+          const t = normalizeEmployeeType(o['Employee Type']);
           if (t === 'G1') byType.G1++; else if (t === 'G2') byType.G2++; else byType.unknown++;
         });
         if (byType.G1) html += '<span class="badge badge-green">G1: ' + byType.G1 + '</span>';
@@ -4928,7 +5000,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
             return '<tr>' + visibleCols.map(function (c) {
               let v = o[c] || (c === 'DOB(As per Adhar)' ? (o['Date of Birth'] || o['DOB'] || '') : c === 'Date Of Joining' ? (o['Date of Joining'] || o['DOJ'] || '') : '') || '—';
               if (c === 'DOB(As per Adhar)' || c === 'Date Of Joining') v = fmtDate(v);
-              if (c === 'Employee Type') return '<td><span class="badge ' + (v === 'G1' ? 'badge-green' : v === 'G2' ? 'badge-yellow' : 'badge-red') + '">' + v + '</span></td>';
+              if (c === 'Employee Type') { const t = normalizeEmployeeType(v) || v; return '<td><span class="badge ' + (t === 'G1' ? 'badge-green' : t === 'G2' ? 'badge-yellow' : 'badge-red') + '">' + t + '</span></td>'; }
               return '<td style="font-size:12px;">' + v + '</td>';
             }).join('') + '<td style="color:var(--text4);">…</td></tr>';
           }).join('') +
@@ -4940,7 +5012,8 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
           html += '<div style="background:var(--yellow-lt);border:1.5px solid rgba(196,134,10,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:12px;">⚠️ ' + byType.unknown + ' rows have an invalid or missing Employee Type (only G1/G2 are supported) — they will be skipped. Fix the CSV and re-upload.</div>';
         }
 
-        html += '<button class="btn btn-success" style="margin-top:4px;" onclick="importCSV()">✅ Import All ' + objects.length + ' Employees</button></div>';
+        html += '<div id="importProgress" style="margin-top:4px;"></div>' +
+          '<button class="btn btn-success" id="importBtn" style="margin-top:4px;" onclick="importCSV()">✅ Import All ' + objects.length + ' Employees</button></div>';
         document.getElementById('csvPreview').innerHTML = html;
         APP._csvData = { headers, rows: objects };
       };
@@ -4953,6 +5026,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
       if (type === 'int') { const n = parseInt(v.replace(/,/g, ''), 10); return isNaN(n) ? null : n; }
       if (type === 'bool') { return /^(yes|y|true|1)$/i.test(v); }
       if (type === 'date') { return v ? fmtDate(v) : ''; }
+      if (type === 'emptype') { return normalizeEmployeeType(v); }
       return v; // str
     }
 
@@ -4980,56 +5054,121 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
 
     async function importCSV() {
       if (!APP._csvData) return;
+
+      const total = APP._csvData.rows.length;
+      const btn = document.getElementById('importBtn');
+      const fileInput = document.getElementById('csvFile');
+      const progressDiv = document.getElementById('importProgress');
+      if (btn) btn.disabled = true;
+      if (fileInput) fileInput.disabled = true;
+      if (progressDiv) progressDiv.innerHTML = '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;"><span class="spinner"></span><span style="font-size:13px;color:var(--accent);" id="importStatus">Importing 0 / ' + total + '…</span></div>';
+
       let success = 0, fail = 0, failReasons = [], credentials = [];
 
-      for (const row of APP._csvData.rows) {
-        const payload = buildEmployeePayloadFromRow(row);
-        if (!payload.employee_code || !payload.name) {
-          fail++; failReasons.push((payload.name || payload.employee_code || 'Row') + ': missing Employee Code or Name'); continue;
-        }
-        if (!['G1', 'G2'].includes(payload.employee_type)) {
-          fail++; failReasons.push(payload.employee_code + ': missing or unsupported Employee Type (only G1/G2 allowed)'); continue;
-        }
-        if (!payload.department) payload.department = 'Other';
-
+      for (let i = 0; i < APP._csvData.rows.length; i++) {
         try {
-          const res = await apiCall('POST', '/api/employees/', payload);
-          if (res && res.initial_password) credentials.push(res.login_username + '  /  ' + res.initial_password);
-          success++;
+          const row = APP._csvData.rows[i];
+          const statusEl = document.getElementById('importStatus');
+          if (statusEl) statusEl.textContent = 'Importing ' + (i + 1) + ' / ' + total + '…';
+
+          const payload = buildEmployeePayloadFromRow(row);
+          if (!payload.employee_code || !payload.name) {
+            fail++; failReasons.push((payload.name || payload.employee_code || 'Row') + ': missing Employee Code or Name'); continue;
+          }
+          if (!['G1', 'G2'].includes(payload.employee_type)) {
+            fail++; failReasons.push(payload.employee_code + ': missing or unsupported Employee Type (only G1/G2 allowed)'); continue;
+          }
+          if (!payload.department) payload.department = 'Other';
+
+          try {
+            const res = await apiCall('POST', '/api/employees/', payload);
+            if (res && res.initial_password) credentials.push(res.login_username + '  /  ' + res.initial_password);
+            success++;
+          } catch (e) {
+            fail++;
+            failReasons.push(payload.employee_code + ': ' + (e.message || 'import failed'));
+          }
         } catch (e) {
           fail++;
-          failReasons.push(payload.employee_code + ': ' + (e.message || 'import failed'));
+          failReasons.push('Row ' + (i + 1) + ': UNEXPECTED ERROR - ' + (e.message || e));
         }
+      }
+
+      if (btn) btn.disabled = false;
+      if (fileInput) fileInput.disabled = false;
+      if (progressDiv) progressDiv.innerHTML = '';
+
+      if (fail > 0) {
+        APP._lastFailReasons = failReasons;
+        // small delay then auto-show skip reasons so user doesn't miss them
+        setTimeout(function() { showSkipReasons(); }, 800);
       }
 
       const msg = '✅ Imported: ' + success + (fail > 0 ? '  ❌ Skipped: ' + fail : '');
       toast(msg, success > 0 ? 'success' : 'error');
 
       if (credentials.length) {
-        alert('✅ ' + credentials.length + ' new employee logins created:\n\n' + credentials.join('\n') + '\n\nPlease share these credentials with the respective employees. Passwords cannot be retrieved again.');
+        APP._lastImportCredentials = credentials;
+        document.querySelector('#credentialsModal .modal-title').textContent = '🔑 New Employee Logins Created';
+        const modalBody = document.getElementById('credentialsModalBody');
+        const list = credentials.map(function(c, idx) {
+          const parts = c.split('  /  ');
+          return '<tr><td style="padding:6px 12px;font-family:monospace;font-size:13px;">' + parts[0] + '</td><td style="padding:6px 12px;font-family:monospace;font-size:13px;color:var(--accent);font-weight:600;">' + parts[1] + '</td></tr>';
+        }).join('');
+        modalBody.innerHTML =
+          '<p style="font-size:13px;color:var(--text2);margin-bottom:12px;">' + credentials.length + ' new employee logins were created. Passwords cannot be retrieved again — share them now.</p>' +
+          '<div class="table-wrap"><table style="width:100%;"><thead><tr><th style="text-align:left;padding:6px 12px;">Username</th><th style="text-align:left;padding:6px 12px;">Initial Password</th></tr></thead><tbody id="credTableBody">' + list + '</tbody></table></div>' +
+          '<button class="btn btn-sm btn-secondary" style="margin-top:12px;" onclick="copyAllCredentials()">📋 Copy All</button>';
+        document.getElementById('credentialsModal').classList.add('active');
       }
 
       if (success > 0) {
-        document.getElementById('csvPreview').innerHTML =
-          '<div style="padding:20px;text-align:center;background:var(--green-lt);border-radius:10px;margin-top:12px;">' +
+        APP._lastFailReasons = failReasons;
+        const resultHtml = '<div style="padding:20px;text-align:center;background:var(--green-lt);border-radius:10px;margin-top:12px;">' +
           '<div style="font-size:28px;margin-bottom:8px;">✅</div>' +
           '<div style="font-size:16px;font-weight:700;color:var(--green);">' + success + ' employees imported successfully</div>' +
-          (fail > 0 ? '<div style="font-size:12px;color:var(--red);margin-top:6px;">' + fail + ' rows skipped — ' + failReasons.slice(0, 3).join('; ') + (failReasons.length > 3 ? ' …' : '') + '</div>' : '') +
+          (fail > 0 ? '<div style="font-size:12px;color:var(--red);margin-top:6px;">' + fail + ' rows skipped</div>' +
+            '<button class="btn btn-sm btn-ghost" style="margin-top:8px;color:var(--red);" onclick="showSkipReasons()">📋 Show All Skip Reasons</button>' : '') +
           '<div style="margin-top:14px;display:flex;gap:10px;justify-content:center;">' +
           '<button class="btn btn-primary" onclick="navigateTo(\'masterDB\')">View Employees →</button>' +
           '<button class="btn btn-secondary" onclick="document.getElementById(\'csvFile\').value=\'\';document.getElementById(\'csvPreview\').innerHTML=\'\'">Import More</button>' +
           '</div>' +
           '</div>';
+        document.getElementById('csvPreview').innerHTML = resultHtml;
       } else {
+        APP._lastFailReasons = failReasons;
         document.getElementById('csvPreview').innerHTML =
           '<div style="padding:20px;text-align:center;background:var(--red-lt);border-radius:10px;margin-top:12px;">' +
           '<div style="font-size:28px;margin-bottom:8px;">❌</div>' +
-          '<div style="font-size:14px;color:var(--red);">No employees imported.<br/>' + failReasons.slice(0, 5).join('<br/>') + '</div>' +
+          '<div style="font-size:14px;color:var(--red);">No employees imported.</div>' +
+          '<button class="btn btn-sm btn-ghost" style="margin-top:8px;color:var(--red);" onclick="showSkipReasons()">📋 Show All Skip Reasons</button>' +
           '</div>';
       }
 
       APP._csvData = null;
       await fetchAllData();
+    }
+
+    function copyAllCredentials() {
+      const creds = (APP._lastImportCredentials || []).map(function(c) { return c.split('  /  ').join('\t'); }).join('\n');
+      navigator.clipboard.writeText(creds).then(function() {
+        toast('Credentials copied to clipboard', 'success');
+      }).catch(function() {
+        toast('Copy failed — select and copy manually', 'error');
+      });
+    }
+
+    function showSkipReasons() {
+      const reasons = APP._lastFailReasons || [];
+      if (!reasons.length) return;
+      const modalBody = document.getElementById('credentialsModalBody');
+      document.querySelector('#credentialsModal .modal-title').textContent = '❌ ' + reasons.length + ' Rows Skipped';
+      modalBody.innerHTML =
+        '<p style="font-size:13px;color:var(--red);margin-bottom:12px;"><strong>' + reasons.length + ' rows were skipped:</strong></p>' +
+        '<div style="max-height:50vh;overflow-y:auto;font-size:12px;font-family:monospace;line-height:1.7;">' +
+        reasons.map(function(r) { return '<div style="padding:4px 0;border-bottom:1px solid var(--border2);">❌ ' + r + '</div>'; }).join('') +
+        '</div>';
+      document.getElementById('credentialsModal').classList.add('active');
     }
 
     // ===================== REPORTS =====================

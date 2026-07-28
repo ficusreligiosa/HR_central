@@ -56,6 +56,16 @@ class EmployeeCreate(BaseModel):
     has_el: Optional[bool] = True
     has_cl: Optional[bool] = True
 
+    # Original document checklist (from Employee model)
+    doc_aadhar: Optional[str] = "Pending"
+    doc_pan: Optional[str] = "Pending"
+    doc_photo: Optional[str] = "Pending"
+    doc_marksheet: Optional[str] = "Pending"
+    doc_experience: Optional[str] = "Pending"
+    doc_bank: Optional[str] = "Pending"
+    doc_offer_letter: Optional[str] = "Pending"
+    doc_joining_form: Optional[str] = "Pending"
+
     # ── Extended HR fields ──────────────────────────────────────────────
     doc_medical_certificate: Optional[str] = "Pending"
 
@@ -106,6 +116,10 @@ class EmployeeCreate(BaseModel):
     relieving_letter_issued: Optional[str] = "Pending"
     remarks: Optional[str] = None
     address_verification_link: Optional[str] = None
+
+    # Inbox linkage
+    form_row_id: Optional[str] = None
+    inbox_status: Optional[str] = "Pending"
 
     source: Optional[str] = None
     approved_by: Optional[str] = None
@@ -158,6 +172,16 @@ class EmployeeUpdate(BaseModel):
     # ── Extended HR fields ──────────────────────────────────────────────
     doc_medical_certificate: Optional[str] = None
 
+    # Original document checklist (from Employee model)
+    doc_aadhar: Optional[str] = None
+    doc_pan: Optional[str] = None
+    doc_photo: Optional[str] = None
+    doc_marksheet: Optional[str] = None
+    doc_experience: Optional[str] = None
+    doc_bank: Optional[str] = None
+    doc_offer_letter: Optional[str] = None
+    doc_joining_form: Optional[str] = None
+
     emergency_contact_number: Optional[str] = None
     emergency_contact_person: Optional[str] = None
     emergency_relation: Optional[str] = None
@@ -205,6 +229,10 @@ class EmployeeUpdate(BaseModel):
     relieving_letter_issued: Optional[str] = None
     remarks: Optional[str] = None
     address_verification_link: Optional[str] = None
+
+    # Inbox linkage
+    form_row_id: Optional[str] = None
+    inbox_status: Optional[str] = None
 
     source: Optional[str] = None
     approved_by: Optional[str] = None
@@ -257,12 +285,13 @@ def get_employee(employee_code: str, db: Session = Depends(get_db), current_user
 
 @router.post("/", status_code=201)
 def create_employee(payload: EmployeeCreate, db: Session = Depends(get_db), current_user: User = Depends(require_hr_admin)):
-    if db.query(Employee).filter(Employee.employee_code == payload.employee_code).first():
+    existing = db.query(Employee).filter(Employee.employee_code == payload.employee_code).first()
+    if existing:
         raise HTTPException(status_code=400, detail="Employee code already exists")
 
     emp = Employee(**payload.model_dump())
     db.add(emp)
-    db.flush()  # emp.employee_code / emp.name / emp.date_of_birth are populated from payload already
+    db.flush()
 
     # ── Auto-create the employee's login account ──────────────────────────
     user, initial_password = create_employee_login(db, emp)
