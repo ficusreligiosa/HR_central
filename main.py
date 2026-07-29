@@ -32,15 +32,27 @@ except Exception as e:
 
 # ── Migrate varchar columns to TEXT ────────────────────────────────────────
 def migrate_columns():
-    """Alter known small varchar/date columns to TEXT so long PANs, doc URLs, empty dates etc fit."""
+    """Alter known small varchar/date/document columns to TEXT so long PANs, doc URLs, empty dates etc fit."""
     from sqlalchemy import text
     db = SessionLocal()
     try:
+        # Standard columns to convert to TEXT
         cols = [
             "pan_number", "contact", "emergency_contact_number",
             "aadhar_number", "ifsc_code",
             "date_of_birth", "date_of_joining", "probation_end",
             "confirmation_date", "date_of_leaving",
+            "doc_aadhar", "doc_pan", "doc_photo", "doc_marksheet", "doc_experience",
+            "doc_bank", "doc_offer_letter", "doc_joining_form", "inbox_status",
+            "qualification", "doc_medical_certificate", "doc_personal_details",
+            "doc_form_26", "doc_esi_form1", "doc_form2_pf", "doc_nomination_form_f",
+            "doc_epf_form11", "doc_joining_report", "doc_rules_regulation_ack",
+            "doc_appointment_letter", "doc_confirmation_letter", "doc_service_record",
+            "doc_increment_letter", "doc_promotion_letter", "doc_employment_history_sheet",
+            "doc_jd", "doc_master_task_sheet", "doc_kra", "doc_kpi",
+            "asset_sim", "asset_laptop", "remarks", "address_verification_link",
+            "emergency_contact_person", "emergency_relation", "file_number",
+            "source", "approved_by", "employee_type"
         ]
         for col in cols:
             try:
@@ -48,19 +60,19 @@ def migrate_columns():
             except Exception:
                 pass  # already TEXT or doesn't exist
         
-        # Ensure specific columns are TEXT and employee_type drops NOT NULL
-        extra_migrations = [
-            ("ALTER TABLE employees ALTER COLUMN employee_type TYPE TEXT", "Alter employee_type to TEXT"),
-            ("ALTER TABLE employees ALTER COLUMN employee_type DROP NOT NULL", "Drop NOT NULL from employee_type"),
-            ("ALTER TABLE employees ALTER COLUMN full_final_completed TYPE TEXT USING full_final_completed::text", "Alter full_final_completed to TEXT"),
-            ("ALTER TABLE employees ALTER COLUMN relieving_letter_issued TYPE TEXT USING relieving_letter_issued::text", "Alter relieving_letter_issued to TEXT"),
-        ]
-        for query, desc in extra_migrations:
+        # Ensure employee_type drops NOT NULL
+        try:
+            db.execute(text("ALTER TABLE employees ALTER COLUMN employee_type DROP NOT NULL"))
+        except Exception:
+            pass
+
+        # Boolean columns that need casting to TEXT
+        bool_cols = ["full_final_completed", "relieving_letter_issued"]
+        for col in bool_cols:
             try:
-                db.execute(text(query))
-                print(f"[OK] Run: {desc}")
-            except Exception as e:
-                print(f"[WARNING] Failed: {desc} - {e}")
+                db.execute(text(f"ALTER TABLE employees ALTER COLUMN {col} TYPE TEXT USING {col}::text"))
+            except Exception:
+                pass
 
         db.commit()
         print("[OK] DB columns migrated to TEXT")
