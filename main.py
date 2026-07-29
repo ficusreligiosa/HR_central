@@ -23,6 +23,13 @@ from app.routes.settings import router as settings_router
 # ── Create tables ──────────────────────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
 
+# ── Ensure new employee columns exist ──────────────────────────────────────
+try:
+    import migrate_add_employee_fields
+    migrate_add_employee_fields.run()
+except Exception as e:
+    print(f"[WARNING] Column addition migration error: {e}")
+
 # ── Migrate varchar columns to TEXT ────────────────────────────────────────
 def migrate_columns():
     """Alter known small varchar/date columns to TEXT so long PANs, doc URLs, empty dates etc fit."""
@@ -41,7 +48,7 @@ def migrate_columns():
             except Exception:
                 pass  # already TEXT or doesn't exist
         db.commit()
-        print("✅ DB columns migrated to TEXT")
+        print("[OK] DB columns migrated to TEXT")
     finally:
         db.close()
 
@@ -61,7 +68,7 @@ def seed_users():
             ]
             db.add_all(default_users)
             db.commit()
-            print("✅ Default users seeded")
+            print("[OK] Default users seeded")
     finally:
         db.close()
 

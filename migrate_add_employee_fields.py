@@ -81,8 +81,8 @@ def run():
         for col_name, col_def in NEW_COLUMNS:
             sql = f'ALTER TABLE employees ADD COLUMN IF NOT EXISTS {col_name} {col_def};'
             conn.execute(text(sql))
-            print(f"✅ ensured column: {col_name}")
-    print("\n🎉 Migration complete — employees table now has all extended HR fields.")
+            print(f"[OK] ensured column: {col_name}")
+    print("\nMigration complete - employees table now has all extended HR fields.")
 
 if __name__ == "__main__":
     run()
