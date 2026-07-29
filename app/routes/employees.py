@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api/employees", tags=["Employees"])
 class EmployeeCreate(BaseModel):
     name: str
     employee_code: str
-    employee_type: str
+    employee_type: Optional[str] = None
     status: Optional[str] = "Active"
     father_name: Optional[str] = None
     date_of_birth: Optional[str] = None

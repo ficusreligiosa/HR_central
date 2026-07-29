@@ -5009,7 +5009,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         if (objects.length > 8) html += '<p style="font-size:12px;color:var(--text3);margin-bottom:10px;">Showing first 8 of ' + objects.length + ' rows</p>';
 
         if (byType.unknown > 0) {
-          html += '<div style="background:var(--yellow-lt);border:1.5px solid rgba(196,134,10,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:12px;">⚠️ ' + byType.unknown + ' rows have an invalid or missing Employee Type (only G1/G2 are supported) — they will be skipped. Fix the CSV and re-upload.</div>';
+          html += '<div style="background:var(--yellow-lt);border:1.5px solid rgba(196,134,10,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:12px;">⚠️ ' + byType.unknown + ' rows have a missing or custom Employee Type. They will be imported with empty type.</div>';
         }
 
         html += '<div id="importProgress" style="margin-top:4px;"></div>' +
@@ -5075,8 +5075,8 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
           if (!payload.employee_code || !payload.name) {
             fail++; failReasons.push((payload.name || payload.employee_code || 'Row') + ': missing Employee Code or Name'); continue;
           }
-          if (!['G1', 'G2'].includes(payload.employee_type)) {
-            fail++; failReasons.push(payload.employee_code + ': missing or unsupported Employee Type (only G1/G2 allowed)'); continue;
+          if (!payload.employee_type) {
+            payload.employee_type = '';
           }
           if (!payload.department) payload.department = 'Other';
 

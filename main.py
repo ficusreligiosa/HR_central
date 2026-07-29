@@ -47,6 +47,21 @@ def migrate_columns():
                 db.execute(text(f"ALTER TABLE employees ALTER COLUMN {col} TYPE TEXT"))
             except Exception:
                 pass  # already TEXT or doesn't exist
+        
+        # Ensure specific columns are TEXT and employee_type drops NOT NULL
+        extra_migrations = [
+            ("ALTER TABLE employees ALTER COLUMN employee_type TYPE TEXT", "Alter employee_type to TEXT"),
+            ("ALTER TABLE employees ALTER COLUMN employee_type DROP NOT NULL", "Drop NOT NULL from employee_type"),
+            ("ALTER TABLE employees ALTER COLUMN full_final_completed TYPE TEXT USING full_final_completed::text", "Alter full_final_completed to TEXT"),
+            ("ALTER TABLE employees ALTER COLUMN relieving_letter_issued TYPE TEXT USING relieving_letter_issued::text", "Alter relieving_letter_issued to TEXT"),
+        ]
+        for query, desc in extra_migrations:
+            try:
+                db.execute(text(query))
+                print(f"[OK] Run: {desc}")
+            except Exception as e:
+                print(f"[WARNING] Failed: {desc} - {e}")
+
         db.commit()
         print("[OK] DB columns migrated to TEXT")
     finally:
@@ -106,12 +121,6 @@ if os.path.exists("frontend"):
     @app.get("/", include_in_schema=False)
     def serve_frontend():
         return FileResponse("frontend/index.html")
-
-@app.get("/api/inspect-db")
-def inspect_db():
-    from sqlalchemy import inspect
-    inst = inspect(engine)
-    return {c['name']: str(c['type']) for c in inst.get_columns('employees')}
 
 @app.get("/health")
 def health():

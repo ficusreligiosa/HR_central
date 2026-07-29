@@ -7,7 +7,7 @@ class Employee(Base):
 
     id                = Column(Integer, primary_key=True, index=True)
     employee_code     = Column(String(20), unique=True, nullable=False, index=True)
-    employee_type     = Column(String(5), nullable=False)   # G1 / G2
+    employee_type     = Column(Text, nullable=True)   # G1 / G2 or empty
     status            = Column(String(20), default="Active")
 
     # Personal
