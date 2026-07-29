@@ -107,6 +107,12 @@ if os.path.exists("frontend"):
     def serve_frontend():
         return FileResponse("frontend/index.html")
 
+@app.get("/api/inspect-db")
+def inspect_db():
+    from sqlalchemy import inspect
+    inst = inspect(engine)
+    return {c['name']: str(c['type']) for c in inst.get_columns('employees')}
+
 @app.get("/health")
 def health():
     return {"status": "ok", "app": settings.APP_NAME, "company": settings.COMPANY_NAME}
