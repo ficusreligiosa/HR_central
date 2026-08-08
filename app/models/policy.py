@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Integer, String, Text, LargeBinary, DateTime
 from sqlalchemy.sql import func
 from app.database import Base
 
@@ -13,6 +13,9 @@ class Policy(Base):
     # Populated when the policy is an uploaded file
     filename    = Column(String(255))
     filepath    = Column(String(500))
+    # Raw bytes kept in the DB so files survive the ephemeral local disk
+    # (e.g. Render's free tier), where uploads/policies gets wiped on redeploy.
+    file_data   = Column(LargeBinary)
 
     # Populated when the policy is a Google Drive link instead of a file
     drive_url   = Column(String(500))

@@ -4,7 +4,8 @@ import uuid
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, Response
+from mimetypes import guess_type
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -20,8 +21,19 @@ router = APIRouter(prefix="/api/policies", tags=["Policies"])
 # without a persistent disk attached), files written here will be lost on
 # redeploy/restart. Attach a persistent disk mounted at this path in
 # production, or swap this for S3/Cloud Storage later.
-UPLOAD_DIR = os.path.join("uploads", "policies")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads", "policies")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+def _resolve_filepath(filepath):
+    """Return an absolute path for a stored filepath, independent of the server's CWD."""
+    if not filepath:
+        return None
+    path = filepath.replace("/", os.sep).replace("\\", os.sep)
+    if not os.path.isabs(path):
+        path = os.path.join(BASE_DIR, path)
+    return path
 
 ALLOWED_EXTENSIONS = {".pdf", ".doc", ".docx", ".png", ".jpg", ".jpeg", ".gif", ".webp"}
 MAX_FILE_SIZE = 20 * 1024 * 1024  # 20 MB
@@ -69,7 +81,8 @@ async def upload_policy(
         category=category,
         description=description,
         filename=file.filename,
-        filepath=disk_path.replace("\\", "/"),
+        filepath=os.path.abspath(disk_path).replace("\\", "/"),
+        file_data=contents,
         drive_url=None,
         created_by=current_user.username,
     )
@@ -127,8 +140,18 @@ def download_policy(policy_id: int, db: Session = Depends(get_db), current_user:
         raise HTTPException(status_code=404, detail="Policy not found")
     if policy.drive_url:
         return RedirectResponse(policy.drive_url)
-    if policy.filepath and os.path.exists(policy.filepath):
-        return FileResponse(policy.filepath, filename=policy.filename or os.path.basename(policy.filepath))
+    # Preferred source: bytes stored in the DB (survives redeploys).
+    if policy.file_data:
+        filename = policy.filename or "policy-document"
+        return Response(
+            content=policy.file_data,
+            media_type=guess_type(filename)[0] or "application/octet-stream",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+    # Fallback: file on disk.
+    disk_path = _resolve_filepath(policy.filepath)
+    if disk_path and os.path.exists(disk_path):
+        return FileResponse(disk_path, filename=policy.filename or os.path.basename(disk_path))
     raise HTTPException(status_code=404, detail="File not found on server")
 
 
@@ -138,9 +161,10 @@ def delete_policy(policy_id: int, db: Session = Depends(get_db), current_user: U
     policy = db.query(Policy).filter(Policy.id == policy_id).first()
     if not policy:
         raise HTTPException(status_code=404, detail="Policy not found")
-    if policy.filepath and os.path.exists(policy.filepath):
+    disk_path = _resolve_filepath(policy.filepath)
+    if disk_path and os.path.exists(disk_path):
         try:
-            os.remove(policy.filepath)
+            os.remove(disk_path)
         except OSError:
             pass
     db.delete(policy)

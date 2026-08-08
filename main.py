@@ -81,6 +81,21 @@ def migrate_columns():
 
 migrate_columns()
 
+# ── Ensure policies table has file_data column (bytes survive redeploys) ──
+def migrate_policies():
+    from sqlalchemy import text
+    db = SessionLocal()
+    try:
+        db.execute(text("ALTER TABLE policies ADD COLUMN IF NOT EXISTS file_data BYTEA"))
+        db.commit()
+        print("[OK] policies.file_data column ensured")
+    except Exception:
+        pass
+    finally:
+        db.close()
+
+migrate_policies()
+
 # ── Seed default users ─────────────────────────────────────────────────────
 def seed_users():
     from app.auth import hash_password
