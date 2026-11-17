@@ -10,40 +10,42 @@
     rel="stylesheet">
   <style>
     :root {
-      --bg: #f5f3ef;
-      --bg2: #efecea;
+      --bg: #f4f9fa;
+      --bg2: #e9f4f6;
       --white: #ffffff;
       --surface: #ffffff;
-      --surface2: #faf9f7;
-      --surface3: #f0ede8;
-      --border: #e2ddd7;
-      --border2: #d4cfc8;
-      --shadow-sm: 0 1px 3px rgba(60, 44, 30, 0.07), 0 1px 2px rgba(60, 44, 30, 0.04);
-      --shadow: 0 4px 16px rgba(60, 44, 30, 0.10), 0 1px 4px rgba(60, 44, 30, 0.06);
-      --shadow-lg: 0 12px 40px rgba(60, 44, 30, 0.14), 0 4px 12px rgba(60, 44, 30, 0.08);
+      --surface2: #f8fcfd;
+      --surface3: #eef7fa;
+      --border: rgba(30, 157, 181, 0.16);
+      --border2: rgba(30, 157, 181, 0.28);
+      --shadow-sm: 0 1px 3px rgba(11, 37, 44, 0.05), 0 1px 2px rgba(11, 37, 44, 0.03);
+      --shadow: 0 4px 16px rgba(11, 37, 44, 0.08), 0 1px 4px rgba(11, 37, 44, 0.04);
+      --shadow-lg: 0 14px 40px rgba(11, 37, 44, 0.12), 0 4px 12px rgba(11, 37, 44, 0.06);
 
-      --accent: #2a7d6f;
-      --accent-lt: #e6f4f1;
-      --accent-md: #c2e4de;
-      --accent-dk: #1f5c52;
-      --accent2: #d97706;
-      --accent2-lt: #fef3e2;
+      --accent: #1E9DB5;
+      --accent-lt: rgba(30, 157, 181, 0.08);
+      --accent-md: rgba(30, 157, 181, 0.22);
+      --accent-dk: #15798c;
+      --accent2: #E3A71F;
+      --accent2-lt: rgba(227, 167, 31, 0.12);
+      --accent2-md: rgba(227, 167, 31, 0.24);
+      --accent2-dk: #c48e12;
 
-      --blue: #3b6fd4;
-      --blue-lt: #eef2fb;
-      --green: #2d9e6b;
-      --green-lt: #e8f7f0;
-      --red: #d94f4f;
-      --red-lt: #fdf0f0;
-      --yellow: #c4860a;
-      --yellow-lt: #fef8ec;
-      --purple: #7c5ef7;
-      --purple-lt: #f3f0ff;
+      --blue: #1E9DB5;
+      --blue-lt: rgba(30, 157, 181, 0.08);
+      --green: #1E9DB5;
+      --green-lt: rgba(30, 157, 181, 0.08);
+      --red: #E3A71F;
+      --red-lt: rgba(227, 167, 31, 0.12);
+      --yellow: #E3A71F;
+      --yellow-lt: rgba(227, 167, 31, 0.12);
+      --purple: #1E9DB5;
+      --purple-lt: rgba(30, 157, 181, 0.08);
 
-      --text: #1e1a16;
-      --text2: #5a5248;
-      --text3: #9c9188;
-      --text4: #c4bcb4;
+      --text: #0B252C;
+      --text2: #24525D;
+      --text3: #58828D;
+      --text4: #9EBDC5;
 
       --font: 'DM Sans', sans-serif;
       --serif: 'DM Serif Display', serif;
@@ -82,12 +84,12 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: var(--border2);
+      background: rgba(30, 157, 181, 0.22);
       border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: var(--text4);
+      background: rgba(30, 157, 181, 0.40);
     }
 
     /* ===== LOGIN ===== */
@@ -98,8 +100,8 @@
       min-height: 100vh;
       background: var(--bg);
       background-image:
-        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(42, 125, 111, 0.10) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 90% 100%, rgba(217, 119, 6, 0.08) 0%, transparent 50%);
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(30, 157, 181, 0.14) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 100%, rgba(227, 167, 31, 0.10) 0%, transparent 50%);
     }
 
     .login-bg-shapes {
@@ -116,7 +118,7 @@
       width: 500px;
       height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(42, 125, 111, 0.07) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(30, 157, 181, 0.10) 0%, transparent 70%);
       top: -150px;
       left: -100px;
     }
@@ -127,7 +129,7 @@
       width: 400px;
       height: 400px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(217, 119, 6, 0.06) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(227, 167, 31, 0.08) 0%, transparent 70%);
       bottom: -100px;
       right: -80px;
     }
@@ -144,15 +146,16 @@
     }
 
     .login-logo .logo-mark {
-      width: 52px;
-      height: 52px;
-      background: var(--accent);
-      border-radius: 14px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #1E9DB5 0%, #15798c 100%);
+      border: 2px solid #FFFFFF;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 14px;
-      box-shadow: 0 8px 24px rgba(42, 125, 111, 0.3);
+      box-shadow: 0 8px 24px rgba(30, 157, 181, 0.35), 0 0 0 1px rgba(227, 167, 31, 0.4);
     }
 
     .login-logo .logo-mark svg {
@@ -169,7 +172,7 @@
     }
 
     .login-logo h1 span {
-      color: var(--accent);
+      color: var(--accent2);
     }
 
     .login-logo p {
@@ -181,17 +184,18 @@
     .login-card {
       background: var(--white);
       border: 1px solid var(--border);
+      border-top: 3.5px solid var(--accent);
       border-radius: var(--radius-lg);
       padding: 36px;
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(30, 157, 181, 0.06);
     }
 
     .login-card-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text3);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent2);
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
       margin-bottom: 14px;
     }
 
@@ -224,7 +228,7 @@
     .form-control:focus {
       border-color: var(--accent);
       background: var(--white);
-      box-shadow: 0 0 0 3px rgba(42, 125, 111, 0.10);
+      box-shadow: 0 0 0 3px rgba(30, 157, 181, 0.15);
     }
 
     .form-control::placeholder {
@@ -257,51 +261,55 @@
 
     .btn-primary {
       background: var(--accent);
-      color: #fff;
+      color: #ffffff;
       border-color: var(--accent);
-      box-shadow: 0 2px 8px rgba(42, 125, 111, 0.25);
+      box-shadow: 0 3px 10px rgba(30, 157, 181, 0.28);
     }
 
     .btn-primary:hover {
       background: var(--accent-dk);
       border-color: var(--accent-dk);
-      box-shadow: 0 4px 14px rgba(42, 125, 111, 0.35);
+      box-shadow: 0 5px 16px rgba(30, 157, 181, 0.38);
       transform: translateY(-1px);
     }
 
     .btn-success {
-      background: var(--green);
-      color: #fff;
-      border-color: var(--green);
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 3px 10px rgba(30, 157, 181, 0.25);
     }
 
     .btn-success:hover {
-      background: #247a54;
+      background: var(--accent-dk);
+      border-color: var(--accent-dk);
       transform: translateY(-1px);
     }
 
     .btn-danger {
-      background: var(--red);
-      color: #fff;
-      border-color: var(--red);
+      background: var(--accent2);
+      color: #ffffff;
+      border-color: var(--accent2);
+      box-shadow: 0 3px 10px rgba(227, 167, 31, 0.28);
     }
 
     .btn-danger:hover {
-      background: #b83f3f;
+      background: var(--accent2-dk);
+      border-color: var(--accent2-dk);
       transform: translateY(-1px);
     }
 
     .btn-secondary {
       background: var(--white);
-      color: var(--text2);
+      color: var(--accent);
       border-color: var(--border2);
       box-shadow: var(--shadow-sm);
     }
 
     .btn-secondary:hover {
       border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-lt);
+      color: #ffffff;
+      background: var(--accent);
     }
 
     .btn-ghost {
@@ -353,7 +361,7 @@
       flex-direction: column;
       overflow-y: auto;
       transition: width 0.28s ease;
-      box-shadow: 2px 0 16px rgba(60, 44, 30, 0.05);
+      box-shadow: 2px 0 16px rgba(11, 37, 44, 0.04);
     }
 
     #sidebar.collapsed {
@@ -379,13 +387,14 @@
     .brand-icon {
       width: 32px;
       height: 32px;
-      background: var(--accent);
+      background: linear-gradient(135deg, #1E9DB5, #15798c);
       border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 3px 10px rgba(42, 125, 111, 0.3);
+      box-shadow: 0 3px 10px rgba(30, 157, 181, 0.35);
+      border: 1px solid rgba(227, 167, 31, 0.4);
     }
 
     .brand-icon svg {
@@ -442,9 +451,10 @@
       justify-content: center;
       font-weight: 700;
       font-size: 14px;
-      color: #fff;
-      background: linear-gradient(135deg, var(--accent), #3db89e);
-      box-shadow: 0 2px 8px rgba(42, 125, 111, 0.3);
+      color: #ffffff;
+      background: linear-gradient(135deg, #1E9DB5, #15798c);
+      box-shadow: 0 2px 8px rgba(30, 157, 181, 0.3);
+      border: 2px solid #E3A71F;
     }
 
     .user-info {
@@ -463,12 +473,14 @@
     .user-role {
       font-size: 10px;
       font-family: var(--mono);
-      color: var(--white);
-      background: var(--accent);
-      padding: 1px 7px;
+      color: #ffffff;
+      background: var(--accent2);
+      padding: 1px 8px;
       border-radius: 99px;
       display: inline-block;
       margin-top: 2px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
 
     #sidebar.collapsed .user-info {
@@ -518,11 +530,14 @@
     .nav-item.active {
       background: var(--accent-lt);
       color: var(--accent);
+      font-weight: 600;
+      border-left: 3px solid var(--accent2);
     }
 
     .nav-item.active .nav-icon-wrap {
       background: var(--accent);
-      color: white;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(30, 157, 181, 0.3);
     }
 
     .nav-icon-wrap {
@@ -553,8 +568,8 @@
 
     .nav-badge {
       margin-left: auto;
-      background: var(--red);
-      color: #fff;
+      background: var(--accent2);
+      color: #ffffff;
       border-radius: 99px;
       font-size: 10px;
       font-weight: 700;
@@ -562,6 +577,7 @@
       min-width: 19px;
       text-align: center;
       flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(227, 167, 31, 0.3);
     }
 
     #sidebar.collapsed .nav-badge {
@@ -667,23 +683,23 @@
     }
 
     .stat-card.c-green::before {
-      background: var(--green);
+      background: var(--accent);
     }
 
     .stat-card.c-yellow::before {
-      background: var(--yellow);
+      background: var(--accent2);
     }
 
     .stat-card.c-red::before {
-      background: var(--red);
+      background: var(--accent2);
     }
 
     .stat-card.c-purple::before {
-      background: var(--purple);
+      background: var(--accent);
     }
 
     .stat-card.c-blue::before {
-      background: var(--blue);
+      background: var(--accent);
     }
 
     .stat-icon {
@@ -697,28 +713,18 @@
       margin-bottom: 12px;
     }
 
-    .stat-card.c-teal .stat-icon {
-      background: var(--accent-lt);
-    }
-
-    .stat-card.c-green .stat-icon {
-      background: var(--green-lt);
-    }
-
-    .stat-card.c-yellow .stat-icon {
-      background: var(--yellow-lt);
-    }
-
-    .stat-card.c-red .stat-icon {
-      background: var(--red-lt);
-    }
-
-    .stat-card.c-purple .stat-icon {
-      background: var(--purple-lt);
-    }
-
+    .stat-card.c-teal .stat-icon,
+    .stat-card.c-green .stat-icon,
+    .stat-card.c-purple .stat-icon,
     .stat-card.c-blue .stat-icon {
-      background: var(--blue-lt);
+      background: var(--accent-lt);
+      color: var(--accent);
+    }
+
+    .stat-card.c-yellow .stat-icon,
+    .stat-card.c-red .stat-icon {
+      background: var(--accent2-lt);
+      color: var(--accent2);
     }
 
     .stat-label {
@@ -868,45 +874,52 @@
     }
 
     .badge-green {
-      background: var(--green-lt);
-      color: var(--green);
+      background: var(--accent-lt);
+      color: var(--accent);
+      border: 1px solid rgba(30, 157, 181, 0.25);
     }
 
     .badge-red {
-      background: var(--red-lt);
-      color: var(--red);
+      background: var(--accent2-lt);
+      color: var(--accent2-dk);
+      border: 1px solid rgba(227, 167, 31, 0.3);
     }
 
     .badge-yellow {
-      background: var(--yellow-lt);
-      color: var(--yellow);
+      background: var(--accent2-lt);
+      color: var(--accent2-dk);
+      border: 1px solid rgba(227, 167, 31, 0.3);
     }
 
     .badge-blue {
-      background: var(--blue-lt);
-      color: var(--blue);
+      background: var(--accent-lt);
+      color: var(--accent);
+      border: 1px solid rgba(30, 157, 181, 0.25);
     }
 
     .badge-purple {
-      background: var(--purple-lt);
-      color: var(--purple);
+      background: var(--accent-lt);
+      color: var(--accent-dk);
+      border: 1px solid rgba(30, 157, 181, 0.25);
     }
 
     .badge-teal {
       background: var(--accent-lt);
       color: var(--accent);
+      border: 1px solid rgba(30, 157, 181, 0.25);
     }
 
     .badge-gray {
       background: var(--surface3);
       color: var(--text3);
+      border: 1px solid var(--border);
     }
 
     /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(30, 26, 22, 0.4);
+      background: rgba(11, 37, 44, 0.45);
       backdrop-filter: blur(4px);
       z-index: 1000;
       display: none;
@@ -974,7 +987,7 @@
       flex: 1;
       width: 100%;
       border: none;
-      background: #525659;
+      background: #0B252C;
     }
 
     .modal-body-viewer .viewer-fallback {
@@ -1051,11 +1064,11 @@
     }
 
     .toast.success {
-      border-left: 4px solid var(--green);
+      border-left: 4px solid var(--accent);
     }
 
     .toast.error {
-      border-left: 4px solid var(--red);
+      border-left: 4px solid var(--accent2);
     }
 
     .toast.info {
@@ -1137,20 +1150,20 @@
     }
 
     tr.clickable-row:hover td {
-      background: var(--yellow-lt) !important;
+      background: var(--accent-lt) !important;
       cursor: pointer;
     }
 
     .inbox-card.pending {
-      border-left: 4px solid var(--yellow);
+      border-left: 4px solid var(--accent2);
     }
 
     .inbox-card.approved {
-      border-left: 4px solid var(--green);
+      border-left: 4px solid var(--accent);
     }
 
     .inbox-card.rejected {
-      border-left: 4px solid var(--red);
+      border-left: 4px solid var(--accent2);
       opacity: 0.75;
     }
 
@@ -1185,7 +1198,7 @@
 
     /* SALARY */
     .salary-preview {
-      background: linear-gradient(135deg, var(--accent-lt), #f0fbf8);
+      background: linear-gradient(135deg, rgba(30, 157, 181, 0.05), rgba(227, 167, 31, 0.04));
       border: 1.5px solid var(--accent-md);
       border-radius: var(--radius);
       padding: 20px;
@@ -1227,7 +1240,7 @@
     }
 
     .salary-row.deduction .amount {
-      color: var(--red);
+      color: var(--accent2);
     }
 
     .salary-section-header {
@@ -1252,7 +1265,7 @@
       font-weight: 600;
       color: var(--text);
       min-width: 170px;
-      box-shadow: 2px 0 8px rgba(60, 44, 30, 0.06);
+      box-shadow: 2px 0 8px rgba(11, 37, 44, 0.06);
     }
 
     .doc-table table th:first-child {
@@ -1261,7 +1274,7 @@
       background: var(--surface2);
       z-index: 2;
       min-width: 170px;
-      box-shadow: 2px 0 8px rgba(60, 44, 30, 0.06);
+      box-shadow: 2px 0 8px rgba(11, 37, 44, 0.06);
     }
 
     .doc-table table th {
@@ -1281,15 +1294,15 @@
     }
 
     select.doc-select.received {
-      border-color: var(--green);
-      background: var(--green-lt);
-      color: var(--green);
+      border-color: var(--accent);
+      background: var(--accent-lt);
+      color: var(--accent);
     }
 
     select.doc-select.pending {
-      border-color: var(--yellow);
-      background: var(--yellow-lt);
-      color: var(--yellow);
+      border-color: var(--accent2);
+      background: var(--accent2-lt);
+      color: var(--accent2-dk);
     }
 
     select.doc-select.na {
@@ -1337,7 +1350,7 @@
 
     .search-input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(42, 125, 111, 0.10);
+      box-shadow: 0 0 0 3px rgba(30, 157, 181, 0.15);
     }
 
     /* TIMELINE */
@@ -1366,15 +1379,15 @@
     }
 
     .timeline-dot.green {
-      background: var(--green);
+      background: var(--accent);
     }
 
     .timeline-dot.red {
-      background: var(--red);
+      background: var(--accent2);
     }
 
     .timeline-dot.yellow {
-      background: var(--yellow);
+      background: var(--accent2);
     }
 
     .timeline-content .timeline-title {
@@ -1440,13 +1453,15 @@
 
     /* EMPLOYEE PORTAL */
     .emp-hero {
-      background: linear-gradient(135deg, var(--accent) 0%, #3db89e 100%);
+      background: linear-gradient(135deg, #1E9DB5 0%, #15798c 60%, #0e4f5c 100%);
+      border: 1px solid rgba(227, 167, 31, 0.35);
       border-radius: var(--radius-lg);
       padding: 32px;
       margin-bottom: 24px;
-      color: white;
+      color: #ffffff;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 8px 30px rgba(30, 157, 181, 0.25);
     }
 
     .emp-hero::before {
@@ -1457,7 +1472,7 @@
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
+      background: radial-gradient(circle, rgba(227, 167, 31, 0.25) 0%, transparent 70%);
     }
 
     .emp-hero::after {
@@ -1468,7 +1483,7 @@
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
     }
 
     .emp-hero h2 {
@@ -1497,7 +1512,7 @@
       height: 28px;
       border-radius: 50%;
       background: var(--accent);
-      color: #fff;
+      color: #ffffff;
       font-weight: 700;
       font-size: 13px;
       display: inline-flex;
@@ -1505,6 +1520,7 @@
       justify-content: center;
       margin-right: 10px;
       flex-shrink: 0;
+      border: 1.5px solid var(--accent2);
     }
 
     .setup-step h3 {
@@ -1517,8 +1533,9 @@
     }
 
     .code-block {
-      background: var(--text);
-      color: #c8faf4;
+      background: #0B252C;
+      color: #ffffff;
+      border: 1px solid rgba(30, 157, 181, 0.25);
       border-radius: var(--radius-sm);
       padding: 16px;
       font-family: var(--mono);
@@ -1613,11 +1630,11 @@
     }
 
     .text-green {
-      color: var(--green);
+      color: var(--accent);
     }
 
     .text-red {
-      color: var(--red);
+      color: var(--accent2);
     }
 
     .text-accent {
@@ -1722,24 +1739,24 @@
     }
 
     .status-select.status-active {
-      background-color: var(--green-lt);
-      color: var(--green);
-      border-color: rgba(45, 158, 107, 0.3);
+      background-color: var(--accent-lt);
+      color: var(--accent);
+      border-color: rgba(30, 157, 181, 0.35);
     }
 
     .status-select.status-inactive,
     .status-select.status-resigned,
     .status-select.status-terminated {
-      background-color: var(--red-lt);
-      color: var(--red);
-      border-color: rgba(217, 79, 79, 0.3);
+      background-color: var(--surface3);
+      color: var(--text3);
+      border-color: var(--border);
     }
 
     .status-select.status-on-leave,
     .status-select.status-probation {
-      background-color: var(--yellow-lt);
-      color: var(--yellow);
-      border-color: rgba(196, 134, 10, 0.3);
+      background-color: var(--accent2-lt);
+      color: var(--accent2-dk);
+      border-color: rgba(227, 167, 31, 0.35);
     }
 
     .status-select option {
@@ -1750,13 +1767,13 @@
     /* DATE ERROR */
     .date-error {
       font-size: 11px;
-      color: var(--red);
+      color: var(--accent2-dk);
       margin-top: 3px;
       display: none;
     }
 
     input.date-invalid {
-      border-color: var(--red) !important;
+      border-color: var(--accent2) !important;
     }
 
     /* CONNECTION BADGE */
@@ -1781,8 +1798,8 @@
     }
 
     .conn-dot.live {
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
     }
 
     /* LOADING SPINNER */
@@ -1904,7 +1921,7 @@
           </div>
         </div>
         <div id="loginError"
-          style="color:var(--red);font-size:12px;background:var(--red-lt);border:1px solid rgba(217,79,79,0.2);padding:8px 12px;border-radius:6px;margin-bottom:12px;display:none;">
+          style="color:var(--accent2);font-size:12px;background:var(--accent2-lt);border:1px solid rgba(227,167,31,0.3);padding:8px 12px;border-radius:6px;margin-bottom:12px;display:none;">
         </div>
         <button class="btn btn-primary btn-lg" onclick="doLogin()">
           Sign In
@@ -1928,7 +1945,7 @@
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
             </svg>
           </div>
-          <span class="brand-name">HR Central</span>
+          <span class="brand-name">HR <span style="color:var(--accent2);">Central</span></span>
         </div>
         <button class="sidebar-toggle" onclick="toggleSidebar()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2892,15 +2909,15 @@
       };
 
       return `
-<div style="background:linear-gradient(135deg,#1e3a5f 0%,#2563a8 100%);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:20px;color:white;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+<div style="background:linear-gradient(135deg,#1E9DB5 0%,#136777 100%);border:1px solid rgba(227,167,31,0.3);box-shadow:0 8px 24px rgba(30,157,181,0.25);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:20px;color:#FFFFFF;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
   <div>
     <div style="font-size:18px;font-weight:700;font-family:var(--serif);">📥 New Employee Form Submissions</div>
     <div style="font-size:12px;opacity:0.8;margin-top:3px;">Review applications submitted via the Google Form onboarding link</div>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;">
     <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;border-color:rgba(255,255,255,0.3);" onclick="fetchAllData()">🔄 Refresh</button>
-    ${counts.pending > 0 ? '<button class="btn btn-sm" style="background:#f59e0b;color:white;border-color:#d97706;" onclick="openBulkApproveModal()">⚡ Bulk Approve (' + counts.pending + ' pending)</button>' : ''}
-    ${counts.imported > 0 ? '<button class="btn btn-sm" style="background:#10b981;color:white;border-color:#059669;" onclick="markAllImportedDone()">✅ Clear Imported (' + counts.imported + ')</button>' : ''}
+    ${counts.pending > 0 ? '<button class="btn btn-sm" style="background:#E3A71F;color:white;border-color:#E3A71F;box-shadow:0 2px 8px rgba(227,167,31,0.35);" onclick="openBulkApproveModal()">⚡ Bulk Approve (' + counts.pending + ' pending)</button>' : ''}
+    ${counts.imported > 0 ? '<button class="btn btn-sm" style="background:#1E9DB5;color:white;border-color:rgba(255,255,255,0.4);" onclick="markAllImportedDone()">✅ Clear Imported (' + counts.imported + ')</button>' : ''}
     <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;border-color:rgba(255,255,255,0.3);" onclick="navigateTo(\'bulkImport\')">📤 Bulk Import CSV</button>
   </div>
 </div>
@@ -2909,30 +2926,30 @@
     <div style="font-size:22px;font-weight:800;color:var(--text);">${counts.all}</div>
     <div style="font-size:11px;color:var(--text3);margin-top:3px;font-weight:600;">TOTAL</div>
   </div>
-  <div style="background:var(--yellow-lt);border:1.5px solid rgba(196,134,10,0.3);border-radius:var(--radius);padding:14px 16px;text-align:center;cursor:pointer;" onclick="filterInbox('pending',this)">
-    <div style="font-size:22px;font-weight:800;color:var(--yellow);">${counts.pending}</div>
-    <div style="font-size:11px;color:var(--yellow);margin-top:3px;font-weight:600;">⏳ PENDING</div>
+  <div style="background:var(--accent2-lt);border:1.5px solid rgba(227,167,31,0.3);border-radius:var(--radius);padding:14px 16px;text-align:center;cursor:pointer;" onclick="filterInbox('pending',this)">
+    <div style="font-size:22px;font-weight:800;color:var(--accent2);">${counts.pending}</div>
+    <div style="font-size:11px;color:var(--accent2);margin-top:3px;font-weight:600;">⏳ PENDING</div>
   </div>
-  <div style="background:#f0fdf4;border:1.5px solid rgba(16,185,129,0.3);border-radius:var(--radius);padding:14px 16px;text-align:center;cursor:pointer;" onclick="filterInbox('imported',this)">
-    <div style="font-size:22px;font-weight:800;color:#059669;">${counts.imported}</div>
-    <div style="font-size:11px;color:#059669;margin-top:3px;font-weight:600;">📤 ALREADY IN DB</div>
+  <div style="background:var(--accent-lt);border:1.5px solid rgba(30,157,181,0.3);border-radius:var(--radius);padding:14px 16px;text-align:center;cursor:pointer;" onclick="filterInbox('imported',this)">
+    <div style="font-size:22px;font-weight:800;color:var(--accent);">${counts.imported}</div>
+    <div style="font-size:11px;color:var(--accent);margin-top:3px;font-weight:600;">📤 ALREADY IN DB</div>
   </div>
-  <div style="background:var(--green-lt);border:1.5px solid rgba(45,158,107,0.3);border-radius:var(--radius);padding:14px 16px;text-align:center;cursor:pointer;" onclick="filterInbox('approved',this)">
-    <div style="font-size:22px;font-weight:800;color:var(--green);">${counts.approved}</div>
-    <div style="font-size:11px;color:var(--green);margin-top:3px;font-weight:600;">✅ APPROVED</div>
+  <div style="background:var(--accent-lt);border:1.5px solid rgba(30,157,181,0.3);border-radius:var(--radius);padding:14px 16px;text-align:center;cursor:pointer;" onclick="filterInbox('approved',this)">
+    <div style="font-size:22px;font-weight:800;color:var(--accent);">${counts.approved}</div>
+    <div style="font-size:11px;color:var(--accent);margin-top:3px;font-weight:600;">✅ APPROVED</div>
   </div>
-  <div style="background:var(--red-lt);border:1.5px solid rgba(217,79,79,0.3);border-radius:var(--radius);padding:14px 16px;text-align:center;cursor:pointer;" onclick="filterInbox('rejected',this)">
-    <div style="font-size:22px;font-weight:800;color:var(--red);">${counts.rejected}</div>
-    <div style="font-size:11px;color:var(--red);margin-top:3px;font-weight:600;">❌ REJECTED</div>
+  <div style="background:var(--accent2-lt);border:1.5px solid rgba(227,167,31,0.3);border-radius:var(--radius);padding:14px 16px;text-align:center;cursor:pointer;" onclick="filterInbox('rejected',this)">
+    <div style="font-size:22px;font-weight:800;color:var(--accent2);">${counts.rejected}</div>
+    <div style="font-size:11px;color:var(--accent2);margin-top:3px;font-weight:600;">❌ REJECTED</div>
   </div>
 </div>
 
-${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(16,185,129,0.4);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-  <div style="font-size:13px;color:#065f46;">
+${counts.imported > 0 ? `<div style="background:var(--accent-lt);border:1.5px solid rgba(30,157,181,0.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+  <div style="font-size:13px;color:var(--accent);">
     <strong>📤 ${counts.imported} submissions already exist in the Employee Database</strong>
     <div style="font-size:12px;margin-top:2px;opacity:0.8;">These were matched by name + contact/email. Click "Clear Imported" to log them as approved and remove from pending count.</div>
   </div>
-  <button class="btn btn-sm" style="background:#10b981;color:white;border-color:#059669;white-space:nowrap;" onclick="markAllImportedDone()">✅ Clear Imported (${counts.imported})</button>
+  <button class="btn btn-sm" style="background:var(--accent);color:white;border-color:var(--accent);white-space:nowrap;" onclick="markAllImportedDone()">✅ Clear Imported (${counts.imported})</button>
 </div>` : ''}
 
 <div style="display:flex;gap:8px;margin-bottom:16px;" id="inboxTabBar">
@@ -2964,8 +2981,8 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
         let statusClass, statusLabel, rowBg, actionBtn;
         if (f.status === 'imported') {
           statusClass = 'badge-green'; statusLabel = '📤 In DB';
-          rowBg = 'background:#f0fdf4;';
-          actionBtn = f.empCode ? '<span class="badge badge-teal font-mono" style="font-size:11px;">' + f.empCode + '</span>' : '<span style="color:#059669;font-size:12px;">✅ Imported</span>';
+          rowBg = 'background:var(--accent-lt);';
+          actionBtn = f.empCode ? '<span class="badge badge-teal font-mono" style="font-size:11px;">' + f.empCode + '</span>' : '<span style="color:var(--accent);font-size:12px;">✅ Imported</span>';
         } else if (f.status === 'approved') {
           statusClass = 'badge-green'; statusLabel = '✅ Approved';
           rowBg = 'background:var(--green-lt);';
@@ -3259,7 +3276,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       }).join('');
 
       document.getElementById('approveModalBody').innerHTML =
-        '<div style="font-size:13px;color:var(--text2);margin-bottom:14px;background:var(--yellow-lt);padding:10px 14px;border-radius:8px;border:1.5px solid rgba(196,134,10,0.3);">' +
+        '<div style="font-size:13px;color:var(--text2);margin-bottom:14px;background:var(--yellow-lt);padding:10px 14px;border-radius:8px;border:1.5px solid rgba(227,167,31,0.3);">' +
         '⚡ Fill details for all <strong>' + pending.length + ' pending</strong> submissions below. Check "Skip" to exclude any row.' +
         '</div>' +
         '<div style="overflow-x:auto;margin-bottom:20px;">' +
@@ -3419,7 +3436,7 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
     <td><span class="badge badge-teal font-mono" style="font-size:11px;">${e['Enter Employee Code'] || '—'}</span></td>
     <td>
       <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#3db89e);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;flex-shrink:0;">${(e.Name || '?')[0]}</div>
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1E9DB5,#146878);border:1.5px solid #E3A71F;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;flex-shrink:0;">${(e.Name || '?')[0]}</div>
         <div>
           <div class="clickable" onclick="viewEmployee('${e['Enter Employee Code']}','${e['Employee Type']}')" style="font-weight:600;color:var(--text);">${e.Name}</div>
           <div style="font-size:11px;color:var(--text3);">${e['E-mail ID (Personal)'] || ''}</div>
@@ -3512,9 +3529,9 @@ ${counts.imported > 0 ? `<div style="background:#f0fdf4;border:1.5px solid rgba(
       const typeColor = { G1: 'badge-green', G2: 'badge-yellow' };
       return `
 <div style="margin-bottom:16px;"><button class="btn btn-ghost btn-sm" onclick="navigateTo('masterDB')">← Back to Database</button></div>
-<div style="background:linear-gradient(135deg,var(--accent) 0%,#3db89e 100%);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:24px;color:white;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden;">
-  <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
-  <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;">${e.Name[0]}</div>
+<div style="background:linear-gradient(135deg,#1E9DB5 0%,#125e6e 100%);border:1px solid rgba(227,167,31,0.3);box-shadow:0 8px 30px rgba(30,157,181,0.25);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:24px;color:white;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(227,167,31,0.25) 0%,transparent 70%);"></div>
+  <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid #E3A71F;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex-shrink:0;">${e.Name[0]}</div>
   <div>
     <h2 style="font-family:var(--serif);font-size:22px;margin-bottom:6px;">${e.Name}</h2>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;opacity:0.9;font-size:13px;">
@@ -4690,7 +4707,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         '<button class="btn btn-success btn-sm" onclick="saveKraDocs(\'' + code + '\',\'' + type + '\')">💾 Save All Links</button>' +
         '</div>' +
         '<div class="card-body">' +
-        '<div style="background:var(--blue-lt);border:1.5px solid rgba(59,111,212,0.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#2a4a8a;">' +
+        '<div style="background:var(--accent-lt);border:1.5px solid rgba(30,157,181,0.25);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:var(--text);">' +
         '💡 <strong>How to upload:</strong> Go to Google Drive → upload your file → right-click → "Get link" → set to "Anyone with the link can view" → paste the link below.' +
         '</div>' +
         KRA_DOC_FIELDS.map(docRow).join('') +
@@ -4835,7 +4852,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         '<button class="btn btn-primary" onclick="downloadBulkTemplate()">⬇️ Download Bulk Import Template (' + EMPLOYEE_IMPORT_MAP.length + ' columns)</button>' +
         '<button class="btn btn-secondary" style="border-color:var(--accent);color:var(--accent);" onclick="downloadSalaryTemplate()">💰 Salary-Only Template</button>' +
         '</div>' +
-        '<div style="margin-top:14px;padding:12px 16px;background:var(--blue-lt);border:1.5px solid rgba(59,111,212,0.25);border-radius:8px;font-size:12px;color:#1e3a6e;">' +
+        '<div style="margin-top:14px;padding:12px 16px;background:var(--accent-lt);border:1.5px solid rgba(30,157,181,0.25);border-radius:8px;font-size:12px;color:var(--text);">' +
         '<strong>📋 Template covers:</strong> Biodata, contact & emergency info, bank & statutory numbers, full salary breakdown (Basic/HRA/allowances/CTC/deductions), and the complete onboarding document checklist (offer letter, PF/ESI forms, SIM/Laptop issuance, KRA/KPI, relieving letter, etc). Only <strong>Employee Code, Name, Employee Type (G1/G2), and Department</strong> are required — everything else can be left blank and filled in later from the employee profile.' +
         '</div>' +
         '</div>' +
@@ -5035,7 +5052,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         if (objects.length > 8) html += '<p style="font-size:12px;color:var(--text3);margin-bottom:10px;">Showing first 8 of ' + objects.length + ' rows</p>';
 
         if (byType.unknown > 0) {
-          html += '<div style="background:var(--yellow-lt);border:1.5px solid rgba(196,134,10,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:12px;">⚠️ ' + byType.unknown + ' rows have a missing or custom Employee Type. They will be imported with empty type.</div>';
+          html += '<div style="background:var(--yellow-lt);border:1.5px solid rgba(227,167,31,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--yellow);margin-bottom:12px;">⚠️ ' + byType.unknown + ' rows have a missing or custom Employee Type. They will be imported with empty type.</div>';
         }
 
         html += '<div id="importProgress" style="margin-top:4px;"></div>' +
@@ -5395,7 +5412,7 @@ ${room > 0 ? `<div class="salary-row"><span>Room Facility</span><span class="amo
         const blobUrl = URL.createObjectURL(blob);
         APP.viewingPolicyBlobUrl = blobUrl;
         if (/\.(png|jpg|jpeg|gif|webp)$/i.test(filename || '')) {
-          body.innerHTML = '<div style="flex:1;display:flex;align-items:center;justify-content:center;background:#525659;overflow:auto;"><img src="' + blobUrl + '" style="max-width:100%;max-height:100%;object-fit:contain;"/></div>';
+          body.innerHTML = '<div style="flex:1;display:flex;align-items:center;justify-content:center;background:#0B252C;overflow:auto;"><img src="' + blobUrl + '" style="max-width:100%;max-height:100%;object-fit:contain;"/></div>';
         } else {
           body.innerHTML = '<iframe src="' + blobUrl + '"></iframe>';
         }
@@ -5993,7 +6010,7 @@ function setupEverything() {
     if (currentHeaders.join("|") !== SHEET_HEADERS.join("|")) {
       sheet.getRange(1, 1, 1, SHEET_HEADERS.length).setValues([SHEET_HEADERS]);
       hr = sheet.getRange(1, 1, 1, SHEET_HEADERS.length);
-      hr.setFontWeight("bold").setBackground("#2a7d6f").setFontColor("#ffffff").setWrap(false);
+      hr.setFontWeight("bold").setBackground("#1E9DB5").setFontColor("#ffffff").setWrap(false);
       sheet.setFrozenRows(1);
       log.push("  headers written for " + name);
     } else {
@@ -6006,7 +6023,7 @@ function setupEverything() {
   else { log.push("EXISTS: FormInboxLog"); }
   if (logSheet.getLastColumn() === 0) {
     logSheet.getRange(1, 1, 1, LOG_HEADERS.length).setValues([LOG_HEADERS]);
-    logSheet.getRange(1, 1, 1, LOG_HEADERS.length).setFontWeight("bold").setBackground("#1f5c52").setFontColor("#ffffff");
+    logSheet.getRange(1, 1, 1, LOG_HEADERS.length).setFontWeight("bold").setBackground("#15798C").setFontColor("#ffffff");
     logSheet.setFrozenRows(1);
   }
 
@@ -6015,7 +6032,7 @@ function setupEverything() {
   else { log.push("EXISTS: Users"); }
   if (usersSheet.getLastRow() === 0) {
     usersSheet.getRange(1, 1, 1, USER_HEADERS.length).setValues([USER_HEADERS]);
-    usersSheet.getRange(1, 1, 1, USER_HEADERS.length).setFontWeight("bold").setBackground("#1f5c52").setFontColor("#ffffff");
+    usersSheet.getRange(1, 1, 1, USER_HEADERS.length).setFontWeight("bold").setBackground("#15798C").setFontColor("#ffffff");
     usersSheet.setFrozenRows(1);
     usersSheet.getRange(2, 1, 4, 5).setValues([
       ["admin","Admin@123","admin","Administrator","Yes"],
@@ -6032,7 +6049,7 @@ function setupEverything() {
   if (!settingsSheet) {
     settingsSheet = ss.insertSheet("Settings");
     settingsSheet.getRange(1, 1, 3, 2).setValues([["Key","Value"],["companyName","HR Central"],["formTab","Form Responses 1"]]);
-    settingsSheet.getRange(1, 1, 1, 2).setFontWeight("bold").setBackground("#1f5c52").setFontColor("#ffffff");
+    settingsSheet.getRange(1, 1, 1, 2).setFontWeight("bold").setBackground("#15798C").setFontColor("#ffffff");
     log.push("CREATED: Settings");
   } else {
     log.push("EXISTS: Settings");
@@ -6043,7 +6060,7 @@ function setupEverything() {
     policiesSheet = ss.insertSheet("Policies");
     var ph = ["id","name","category","description","url","icon"];
     policiesSheet.getRange(1,1,1,ph.length).setValues([ph]);
-    policiesSheet.getRange(1,1,1,ph.length).setFontWeight("bold").setBackground("#2a7d6f").setFontColor("#ffffff");
+    policiesSheet.getRange(1,1,1,ph.length).setFontWeight("bold").setBackground("#1E9DB5").setFontColor("#ffffff");
     policiesSheet.setFrozenRows(1);
     log.push("CREATED: Policies");
   } else { log.push("EXISTS: Policies"); }
@@ -6254,7 +6271,7 @@ function savePolicies(body) {
   sheet.clearContents();
   var headers = ["id","name","category","description","url","icon"];
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#2a7d6f").setFontColor("#ffffff");
+  sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#1E9DB5").setFontColor("#ffffff");
   sheet.setFrozenRows(1);
   if (policies.length > 0) {
     var rows = policies.map(function(p) {
@@ -6615,7 +6632,7 @@ function testFullFlow() {
 <!-- STEP 4 -->
 <div class="setup-step">
   <h3><span class="step-num">4</span>Deploy as Web App</h3>
-  <div style="background:var(--yellow-lt);border:1.5px solid rgba(196,134,10,0.3);border-radius:10px;padding:16px;">
+  <div style="background:var(--yellow-lt);border:1.5px solid rgba(227,167,31,0.3);border-radius:10px;padding:16px;">
     <ol style="font-size:13px;color:var(--text2);line-height:2.2;padding-left:20px;">
       <li>Click <strong>Deploy</strong> (top right) → <strong>New deployment</strong></li>
       <li>Click the gear ⚙️ icon next to "Select type" → choose <strong>Web app</strong></li>
