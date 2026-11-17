@@ -2548,6 +2548,7 @@
         policies: apiCall('GET', '/api/policies/'),
         notices: apiCall('GET', '/api/notices/'),
         hrContact: apiCall('GET', '/api/settings/hr-contact'),
+        users: role === 'admin' ? apiCall('GET', '/api/auth/users') : Promise.resolve([]),
       });
       APP.g1 = (values.g1 || []).map(mapEmployee);
       APP.g2 = (values.g2 || []).map(mapEmployee);
@@ -2556,6 +2557,16 @@
       APP.policies = values.policies || [];
       APP.notices = values.notices || [];
       APP.hrContact = values.hrContact || null;
+      if (values.users) {
+        APP.users = values.users.map(u => ({
+          id: u.id,
+          Username: u.username,
+          DisplayName: u.display_name,
+          Role: u.role,
+          Active: u.is_active ? 'Yes' : 'No',
+          EmployeeCode: u.employee_code || ''
+        }));
+      }
       renderSidebarNav();
       if (APP.currentPage) navigateTo(APP.currentPage);
       if (failures.length) {
@@ -5944,14 +5955,59 @@ Paste your Miro Live Embed URL here.
       const g = (id) => document.getElementById(id)?.value || '';
       const username = g('nu_username').trim(), password = g('nu_password'), display = g('nu_display').trim(), role = g('nu_role');
       if (!username || !password || !display) { toast('All fields required', 'error'); return; }
-      const newUser = { Username: username, Password: password, DisplayName: display, Role: role, Active: 'Yes' };
-      APP.users.push(newUser);
-      if (APP.scriptUrl) { try { await postToScript({ action: 'addUser', ...newUser }); } catch (e) { } }
-      closeModal('addUserModal'); toast('User added', 'success'); navigateTo('userMgmt');
+      try {
+        await apiCall('POST', '/api/auth/users', {
+          username: username,
+          password: password,
+          display_name: display,
+          role: role
+        });
+        closeModal('addUserModal');
+        toast('User created successfully and can now log in!', 'success');
+        await fetchAllData();
+        navigateTo('userMgmt');
+      } catch (err) {
+        toast(err.message || 'Failed to create user', 'error');
+      }
     }
 
-    function toggleUserActive(idx) { APP.users[idx].Active = APP.users[idx].Active === 'No' ? 'Yes' : 'No'; navigateTo('userMgmt'); toast('Status updated', 'info'); }
-    function deleteUser(idx) { if (APP.users[idx].Username === APP.user?.username) { toast("Can't remove your own account", 'error'); return; } APP.users.splice(idx, 1); navigateTo('userMgmt'); toast('User removed', 'info'); }
+    async function toggleUserActive(idx) {
+      const u = APP.users[idx];
+      if (!u?.id) {
+        APP.users[idx].Active = APP.users[idx].Active === 'No' ? 'Yes' : 'No';
+        navigateTo('userMgmt');
+        toast('Status updated', 'info');
+        return;
+      }
+      try {
+        await apiCall('PUT', `/api/auth/users/${u.id}/toggle`);
+        toast('Status updated', 'info');
+        await fetchAllData();
+        navigateTo('userMgmt');
+      } catch (err) {
+        toast(err.message || 'Failed to update user', 'error');
+      }
+    }
+
+    async function deleteUser(idx) {
+      const u = APP.users[idx];
+      if (u.Username === APP.user?.username) { toast("Can't remove your own account", 'error'); return; }
+      if (!confirm(`Are you sure you want to delete user "${u.Username}"?`)) return;
+      if (!u?.id) {
+        APP.users.splice(idx, 1);
+        navigateTo('userMgmt');
+        toast('User removed', 'info');
+        return;
+      }
+      try {
+        await apiCall('DELETE', `/api/auth/users/${u.id}`);
+        toast('User removed', 'info');
+        await fetchAllData();
+        navigateTo('userMgmt');
+      } catch (err) {
+        toast(err.message || 'Failed to remove user', 'error');
+      }
+    }
 
     // ===================== SETUP =====================
     const APPS_SCRIPT_CODE = `// ============================================================
